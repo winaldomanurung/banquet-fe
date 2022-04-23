@@ -1,7 +1,14 @@
 import "./App.css";
+import HeroSection from "./components/HeroSection";
+import NavigationBar from "./components/NavigationBar";
 
 function App() {
-  return <h1>Banquet</h1>;
+  return (
+    <>
+      <NavigationBar />
+      <HeroSection />
+    </>
+  );
 }
 
 export default App;
