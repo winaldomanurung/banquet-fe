@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { IoRestaurantOutline } from "react-icons/io5";
+import styles from "./NavigationBar.module.css";
 
 function NavigationBar() {
   return (
@@ -32,23 +33,12 @@ function NavigationBar() {
             </Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">
-              <Button variant="primary">
-                <Link
-                  to="/login"
-                  style={{ textDecoration: "none", color: "#fff" }}
-                >
-                  Login
-                </Link>
-              </Button>
-            </Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              <Button variant="outline-primary">
-                <Link to="/register" style={{ textDecoration: "none" }}>
-                  Register
-                </Link>
-              </Button>
-            </Nav.Link>
+            <Link to="/login" className={styles.login}>
+              Login
+            </Link>
+            <Link to="/register" className={styles.register}>
+              Register
+            </Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

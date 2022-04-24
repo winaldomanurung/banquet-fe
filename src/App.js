@@ -5,6 +5,8 @@ import HeroSection from "./components/HeroSection";
 import NavigationBar from "./components/NavigationBar";
 import Restaurants from "./components/Restaurants";
 import About from "./components/About";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HeroSection />} />
         <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/about" element={<About />} />
+        <Route path="about" element={<About />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/register" element={<RegisterForm />} />
       </Routes>
     </BrowserRouter>
   );
