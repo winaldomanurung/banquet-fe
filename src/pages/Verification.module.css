@@ -4,3 +4,33 @@
   width: 90vw;
   height: 100%;
 }
+
+.title {
+  color: #2175f3;
+  text-align: center;
+}
+
+.message-box {
+  margin: auto;
+  width: 600px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 50px 5% 80px;
+}
+
+.logo {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.button {
+  background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
