@@ -1,16 +1,16 @@
 import React from "react";
-import styles from "./LoginForm.module.css";
+import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 
-function LoginForm() {
+function Login() {
   return (
     <div className={styles.container}>
       <div className={styles["login-form"]}>
         <div className={styles.logo}>
           <IoRestaurantOutline size={"2.5em"} color="#2175f3" />
         </div>
-        <h1 className={styles.title}>Create your Banquet account</h1>
+        <h1 className={styles.title}>Sign in to your account</h1>
         <form className={styles.form}>
           <label for="email">Email</label>
           <input
@@ -18,14 +18,6 @@ function LoginForm() {
             name="email"
             id="email"
             placeholder="Your email..."
-            className={styles.input}
-          />
-          <label for="username">Username</label>
-          <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Your username..."
             className={styles.input}
           />
           <label for="password">Password</label>
@@ -36,22 +28,17 @@ function LoginForm() {
             placeholder="Your password..."
             className={styles.input}
           />
-          <label for="repeat-password">Repeat Password</label>
-          <input
-            type="password"
-            name="repeat-password"
-            id="repeat-password"
-            placeholder="Repeat your password..."
-            className={styles.input}
-          />
+          <Link to="/reset-password" className={styles.register}>
+            Forgot your password?
+          </Link>
 
           <button type="submit" className={styles.login}>
-            Sign Up
+            Login
           </button>
           <div>
-            Have an account?{" "}
-            <Link to="/login" className={styles.register}>
-              Sign In
+            Don't have an account?{" "}
+            <Link to="/register" className={styles.register}>
+              Sign Up
             </Link>
           </div>
         </form>
@@ -60,4 +47,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default Login;
