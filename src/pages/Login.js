@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
 import useInput from "../hooks/useInput";
 import { URL_API } from "../helpers";
+import { connect } from "react-redux";
+import { authLogin } from "../actions";
 
-function Login() {
+function Login(props) {
+  console.log("props: ", props);
+  const [redirect, setRedirect] = useState(false);
+  let navigate = useNavigate();
+  const backToHome = () => {
+    if (redirect) {
+      console.log("Redirect");
+      return navigate("/profile", { replace: true });
+    }
+  };
   const credentialValidation = (credential) =>
     credential.trim() !== "" && credential.length >= 3;
   const passwordValidation = (password) =>
@@ -63,13 +74,23 @@ function Login() {
         password: enteredPassword,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log("res.data.dataLogin: ", res.data.dataLogin);
+        // res.data.dataLogin akan kita kirim ke dalam Redux
         localStorage.setItem("token_shutter", res.data.token);
+        props.authLogin(res.data.dataLogin);
+        setRedirect(true);
+        resetCredentialInput();
+        resetPasswordInput();
+        console.log("props: ", props);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
     resetCredentialInput();
     resetPasswordInput();
   };
+
+  backToHome();
 
   return (
     <div className={styles.container}>
@@ -127,4 +148,19 @@ function Login() {
   );
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authReducer.userId,
+    username: state.authReducer.username,
+    email: state.authReducer.email,
+    isVerified: state.authReducer.isVerified,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    authLogin: (dataLogin) => dispatch(authLogin(dataLogin)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

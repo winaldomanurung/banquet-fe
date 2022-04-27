@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { IoRestaurantOutline } from "react-icons/io5";
 import styles from "./NavigationBar.module.css";
+import { connect } from "react-redux";
 
-function NavigationBar() {
+function NavigationBar(props) {
+  console.log(props.id);
   return (
     <Navbar bg="light" expand="lg" fixed="top">
       <Container>
@@ -32,18 +34,28 @@ function NavigationBar() {
               </Link>
             </Nav.Link>
           </Nav>
-          <Nav>
-            <Link to="/login" className={styles.login}>
-              Login
-            </Link>
-            <Link to="/register" className={styles.register}>
-              Register
-            </Link>
-          </Nav>
+          {props.id == null && (
+            <Nav>
+              <Link to="/login" className={styles.login}>
+                Login
+              </Link>
+              <Link to="/register" className={styles.register}>
+                Register
+              </Link>
+            </Nav>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authReducer.userId,
+    username: state.authReducer.username,
+    email: state.authReducer.email,
+    isVerified: state.authReducer.isVerified,
+  };
+};
 
-export default NavigationBar;
+export default connect(mapStateToProps)(NavigationBar);
