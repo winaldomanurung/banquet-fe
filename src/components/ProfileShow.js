@@ -1,9 +1,14 @@
 import React from "react";
 import styles from "./ProfileShow.module.css";
 import profpic from "../img/profpic.png";
+import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
+import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
+import { AiOutlineMail } from "react-icons/ai";
+import { MdOutlineVerifiedUser } from "react-icons/md";
 
-function ProfileShow() {
+function ProfileShow(props) {
+  console.log(props.username);
   return (
     <div className={styles.container}>
       {/* Divider */}
@@ -19,16 +24,53 @@ function ProfileShow() {
         <Table striped bordered hover>
           <tbody>
             <tr>
-              <td>Name</td>
-              <td>John Wick</td>
+              <td colSpan={2} className={styles["table-title"]}>
+                User Information
+              </td>
             </tr>
             <tr>
-              <td>Username</td>
-              <td>john.wick</td>
+              <td className={styles.thead}>
+                <FaRegUser
+                  size={"1.2em"}
+                  color="#414141"
+                  className={styles.icon}
+                />
+                Name
+              </td>
+              <td className={styles.td}>{props.username}</td>
             </tr>
             <tr>
-              <td>Email</td>
-              <td>john.wick@gmail.com</td>
+              <td>
+                <FaRegUserCircle
+                  size={"1.2em"}
+                  color="#414141"
+                  className={styles.icon}
+                />
+                Username
+              </td>
+              <td>{props.username}</td>
+            </tr>
+            <tr>
+              <td>
+                <AiOutlineMail
+                  size={"1.2em"}
+                  color="#414141"
+                  className={styles.icon}
+                />
+                Email
+              </td>
+              <td>{props.email}</td>
+            </tr>
+            <tr>
+              <td>
+                <MdOutlineVerifiedUser
+                  size={"1.2em"}
+                  color="#414141"
+                  className={styles.icon}
+                />
+                Verification
+              </td>
+              <td>{props.isVerified ? "Account Verified" : "Pending"}</td>
             </tr>
           </tbody>
         </Table>
@@ -37,4 +79,13 @@ function ProfileShow() {
   );
 }
 
-export default ProfileShow;
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authReducer.userId,
+    username: state.authReducer.username,
+    email: state.authReducer.email,
+    isVerified: state.authReducer.isVerified,
+  };
+};
+
+export default connect(mapStateToProps)(ProfileShow);

@@ -1,6 +1,137 @@
 .container {
   padding-top: 150px;
   margin: auto;
-  width: 90vw;
   height: 100%;
+  padding: 50px 100px;
+  /* border: 1px solid rgb(255, 123, 0); */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid rgb(38, 0, 255); */
+}
+
+.data-container {
+  width: 100%;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  /* border: 1px solid chartreuse; */
+}
+
+.divider1 {
+  /* border: 1px solid chartreuse; */
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.change {
+  background-color: #a7aeb8;
+  border: none;
+  color: white;
+  padding: 7px 12px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.8em;
+}
+
+.divider2 {
+  /* border: 1px solid chartreuse; */
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bio {
+  margin-bottom: 20px;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.image-container {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+img {
+  display: inline;
+  margin: 0 auto;
+  height: 100%;
+  width: 200px;
+  object-fit: cover;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.input {
+  padding: 12px 12px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  border: 1px solid;
+  margin: 20px 0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
+}
+
+.edit {
+  background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 150px;
+  margin-left: 100%;
+  transform: translate(-100%, 0);
+}
+
+.edit-disabled {
+  background-color: #d5dbe6;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: not-allowed;
+  border-radius: 5px;
+  width: 100%;
+}
+
+@media only screen and (max-width: 980px) {
+  .container {
+    padding-top: 150px;
+    margin: auto;
+    width: 90vw;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0px;
+    min-width: 500px;
+  }
+
+  .divider1 {
+    width: 80%;
+  }
+
+  .divider2 {
+    width: 80%;
+  }
 }

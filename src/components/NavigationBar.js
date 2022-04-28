@@ -6,7 +6,7 @@ import styles from "./NavigationBar.module.css";
 import { connect } from "react-redux";
 
 function NavigationBar(props) {
-  console.log(props.id);
+  console.log("PROPS", props.userId);
   return (
     <Navbar bg="light" expand="lg" fixed="top">
       <Container>
@@ -34,7 +34,7 @@ function NavigationBar(props) {
               </Link>
             </Nav.Link>
           </Nav>
-          {props.id == null && (
+          {props.userId == null && (
             <Nav>
               <Link to="/login" className={styles.login}>
                 Login

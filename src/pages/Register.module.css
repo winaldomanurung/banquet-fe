@@ -17,6 +17,8 @@
   border: 1px solid black;
   border-radius: 20px;
   padding: 50px 5% 80px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
 }
 
 .title {
@@ -34,9 +36,11 @@
 .input {
   padding: 12px 12px;
   border-radius: 10px;
-  font-size: 1em;
+  font-size: 0.8em;
   border: 1px solid;
   margin: 10px 0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
 }
 
 input:focus::placeholder {

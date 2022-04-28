@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { authLogin } from "../actions";
 
 function Login(props) {
-  console.log("props: ", props);
+  // console.log("props: ", props);
   const [redirect, setRedirect] = useState(false);
   let navigate = useNavigate();
   const backToHome = () => {
