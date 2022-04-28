@@ -85,6 +85,8 @@ const mapStateToProps = (state) => {
     username: state.authReducer.username,
     email: state.authReducer.email,
     isVerified: state.authReducer.isVerified,
+    bio: state.authReducer.bio,
+    imageUrl: state.authReducer.imageUrl,
   };
 };
 

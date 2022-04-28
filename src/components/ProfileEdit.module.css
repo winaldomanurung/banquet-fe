@@ -54,7 +54,8 @@
 
 .form-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .image-container {
@@ -110,7 +111,31 @@ img {
   margin: 15px 2px;
   cursor: not-allowed;
   border-radius: 5px;
-  width: 100%;
+  width: 150px;
+  margin-left: 100%;
+  transform: translate(-100%, 0);
+}
+
+.invalid {
+  border: 1px solid #b40e0e;
+  background-color: #fddddd;
+}
+
+.error {
+  font-size: 0.9em;
+  text-align: center;
+  background-color: #fddddd;
+  padding: 10px 10px;
+  color: #b40e0e;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  visibility: visible;
+}
+
+.errorHide {
+  font-size: 0.9em;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
 }
 
 @media only screen and (max-width: 980px) {

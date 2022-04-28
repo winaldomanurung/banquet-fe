@@ -1,21 +1,108 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { URL_API } from "../helpers";
 import styles from "./ProfileEdit.module.css";
 import profpic from "../img/profpic.png";
 import { connect } from "react-redux";
-import { Table } from "react-bootstrap";
 import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
-import { AiOutlineMail } from "react-icons/ai";
 import { BsChatLeftQuote } from "react-icons/bs";
+import { RiErrorWarningFill } from "react-icons/ri";
+import useInput from "../hooks/useInput";
+import { useNavigate } from "react-router-dom";
 
 function ProfileEdit(props) {
-  const [nameInput, setNameInput] = useState("");
-
-  const fullnameChangeHandler = (event) => {
-    setNameInput(event.target.value);
+  const [redirect, setRedirect] = useState(false);
+  let navigate = useNavigate();
+  const backToHome = () => {
+    if (redirect) {
+      console.log("Redirect");
+      return navigate("/profile", { replace: true });
+    }
   };
+
+  const fullnameValidation = (fullname) =>
+    fullname.trim() !== "" && fullname.length >= 3;
+
+  const usernameValidation = (username) =>
+    username.trim() !== "" && username.length >= 3;
+
+  const bioValidation = (bio) => {
+    return true;
+  };
+
+  const {
+    value: enteredFullname,
+    isValid: enteredFullnameIsValid,
+    hasError: fullnameInputHasError,
+    valueChangeHandler: fullnameChangeHandler,
+    inputBlurHandler: fullnameBlurHandler,
+    reset: resetFullnameInput,
+    isTouched: isFullnameTouched,
+  } = useInput(fullnameValidation);
+
+  const {
+    value: enteredUsername,
+    isValid: enteredUsernameIsValid,
+    hasError: usernameInputHasError,
+    valueChangeHandler: usernameChangeHandler,
+    inputBlurHandler: usernameBlurHandler,
+    reset: resetUsernameInput,
+    isTouched: isUsernameTouched,
+  } = useInput(usernameValidation);
+
+  const {
+    value: enteredBio,
+    isValid: enteredBioIsValid,
+    hasError: bioInputHasError,
+    valueChangeHandler: bioChangeHandler,
+    inputBlurHandler: bioBlurHandler,
+    reset: resetBioInput,
+    isTouched: isBioTouched,
+  } = useInput(bioValidation);
+
+  let formIsValid = false;
+
+  if (enteredUsernameIsValid && enteredFullnameIsValid && enteredBioIsValid) {
+    formIsValid = true;
+  }
+
+  const fullnameInputClasses = fullnameInputHasError ? styles.invalid : "";
+  const usernameInputClasses = usernameInputHasError ? styles.invalid : "";
+
+  let errorMessage;
+  let errorLogo = <RiErrorWarningFill size={"1.5em"} color="#b40e0e" />;
+  if (fullnameInputHasError && isFullnameTouched) {
+    errorMessage = " Fullname should contain at least 3 characters!";
+  } else if (usernameInputHasError && isUsernameTouched) {
+    errorMessage = " Username should contain at least 3 characters!";
+  } else {
+    errorMessage = "";
+  }
+
+  const formSubmissionHandler = (event) => {
+    event.preventDefault();
+    // if (!formIsValid) {
+    //   return;
+    // }
+    axios
+      .patch(URL_API + `/users/${props.userId}`, {
+        fullname: enteredFullname,
+        username: enteredUsername,
+        bio: enteredBio,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setRedirect(true);
+        resetFullnameInput();
+        resetUsernameInput();
+        resetBioInput();
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className={styles.container}>
-      <form className={styles.form} onSubmit={null}>
+      <form className={styles.form} onSubmit={formSubmissionHandler}>
         <div className={styles["data-container"]}>
           <div className={styles.divider1}>
             <div className={styles["image-container"]}>
@@ -26,6 +113,10 @@ function ProfileEdit(props) {
 
           <div className={styles["divider2"]}>
             <div className={styles["form-title"]}>Edit Information</div>
+            <p className={errorMessage ? styles.error : styles.errorHide}>
+              {errorMessage == "" ? "" : errorLogo}
+              {errorMessage}
+            </p>
             <label for="fullname">
               <FaRegUser
                 size={"1.2em"}
@@ -38,12 +129,14 @@ function ProfileEdit(props) {
               type="fullname"
               name="fullname"
               id="fullname"
-              placeholder={props.username}
-              className={styles.input}
-              defaultValue={props.username}
+              placeholder="Your fullname..."
+              className={`${styles.input} ${fullnameInputClasses}`}
+              defaultValue={
+                props.fullname != null ? props.fullname : props.username
+              }
               onChange={fullnameChangeHandler}
-              // onBlur={fullnameBlurHandler}
-              // value={enteredFullname}
+              onBlur={fullnameBlurHandler}
+              value={enteredFullname}
             />
 
             <label for="username">
@@ -59,12 +152,11 @@ function ProfileEdit(props) {
               name="username"
               id="username"
               placeholder={props.username}
-              className={styles.input}
+              className={`${styles.input} ${usernameInputClasses}`}
               defaultValue={props.username}
-
-              // onChange={usernameChangeHandler}
-              // onBlur={usernameBlurHandler}
-              // value={enteredUsername}
+              onChange={usernameChangeHandler}
+              onBlur={usernameBlurHandler}
+              value={enteredUsername}
             />
 
             <label for="bio">
@@ -79,16 +171,15 @@ function ProfileEdit(props) {
               type="bio"
               name="bio"
               id="bio"
-              placeholder={props.email}
-              className={styles.input}
-              defaultValue={props.email}
-
-              // onChange={bioChangeHandler}
-              // onBlur={bioBlurHandler}
-              // value={enteredBio}
+              placeholder="Your bio..."
+              className={`${styles.input}`}
+              defaultValue={props.bio}
+              onChange={bioChangeHandler}
+              onBlur={bioBlurHandler}
+              value={enteredBio}
             />
 
-            <label for="credential">
+            {/* <label for="credential">
               <BsChatLeftQuote
                 size={"1.2em"}
                 color="#414141"
@@ -100,19 +191,20 @@ function ProfileEdit(props) {
               type="credential"
               name="credential"
               id="credential"
-              placeholder="Your username or email..."
+              placeholder="Your username..."
               className={styles.input}
+              defaultValue={props.imageUrl}
 
               // onChange={credentialChangeHandler}
               // onBlur={credentialBlurHandler}
               // value={enteredCredential}
-            />
+            /> */}
           </div>
         </div>
         <button
           type="submit"
-          // className={formIsValid ? styles.login : styles["login-disabled"]}
-          className={styles.edit}
+          className={formIsValid ? styles.edit : styles["edit-disabled"]}
+          // className={styles.edit}
         >
           Submit
         </button>
@@ -127,6 +219,8 @@ const mapStateToProps = (state) => {
     username: state.authReducer.username,
     email: state.authReducer.email,
     isVerified: state.authReducer.isVerified,
+    bio: state.authReducer.bio,
+    imageUrl: state.authReducer.imageUrl,
   };
 };
 
