@@ -6,3 +6,11 @@ export const authLogin = (data) => {
     payload: data,
   };
 };
+
+// export const editUser = (data) => {
+//   console.log("Data masuk Action dari component :", data);
+//   return {
+//     type: "EDIT_SUCCESS",
+//     payload: data,
+//   };
+// };

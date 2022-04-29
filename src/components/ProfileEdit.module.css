@@ -142,7 +142,6 @@ img {
   .container {
     padding-top: 150px;
     margin: auto;
-    width: 90vw;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -152,11 +151,30 @@ img {
     min-width: 500px;
   }
 
+  .image-container {
+    margin-top: 50px;
+  }
+  .form {
+    width: 75%;
+  }
+
+  .data-container {
+    flex-direction: column;
+  }
   .divider1 {
-    width: 80%;
+    width: 100%;
   }
 
   .divider2 {
-    width: 80%;
+    width: 100%;
+  }
+  .input {
+    width: 100%;
+  }
+  .edit,
+  .edit-disabled {
+    width: 100%;
+    margin-left: 0;
+    transform: translate(0, 0);
   }
 }

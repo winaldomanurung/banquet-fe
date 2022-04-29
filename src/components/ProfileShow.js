@@ -16,7 +16,7 @@ function ProfileShow(props) {
         <div className={styles["image-container"]}>
           <img className={styles.image} src={profpic} />
         </div>
-        <div className={styles.bio}>Sharing my thoughts about food.</div>
+        <div className={styles.bio}>{props.bio}</div>
       </div>
 
       {/* Divider */}
@@ -37,7 +37,7 @@ function ProfileShow(props) {
                 />
                 Name
               </td>
-              <td className={styles.td}>{props.username}</td>
+              <td className={styles.td}>{props.fullname}</td>
             </tr>
             <tr>
               <td>
@@ -82,6 +82,7 @@ function ProfileShow(props) {
 const mapStateToProps = (state) => {
   return {
     userId: state.authReducer.userId,
+    fullname: state.authReducer.fullname,
     username: state.authReducer.username,
     email: state.authReducer.email,
     isVerified: state.authReducer.isVerified,
