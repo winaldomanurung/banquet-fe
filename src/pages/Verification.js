@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { URL_API } from "../helpers";
 import styles from "./Verification.module.css";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MdMarkEmailRead } from "react-icons/md";
 
 function Verification() {
@@ -41,7 +42,9 @@ function Verification() {
           Thank you, nama. Your email has been verified and your account is
           active now. Please use the link below to login to your new account.
         </p>
-        <button className={styles.button}>Login to Your Account</button>
+        <Link to="/login" className={styles.login}>
+          <button className={styles.button}>Login to Your Account</button>
+        </Link>
         <p>Thank you for joining the Banquet community.</p>
       </div>
     </div>

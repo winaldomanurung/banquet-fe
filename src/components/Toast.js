@@ -6,7 +6,7 @@ function ToastBootstrap({ title, message, toggleShow }) {
   return (
     <div style={{ zIndex: 1 }}>
       <ToastContainer position="middle-center">
-        <Toast bg="primary" onClose={toggleShow}>
+        <Toast bg="primary" onClose={toggleShow} animation>
           <Toast.Header>
             <BsCheck size={"2.5em"} color="#2175f3" />
             <strong className="me-auto">{title}</strong>

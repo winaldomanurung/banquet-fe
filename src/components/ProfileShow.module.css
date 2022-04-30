@@ -1,12 +1,22 @@
 .container {
   padding-top: 150px;
   margin: auto;
-  /* width: 90vw; */
   height: 100%;
+  padding: 50px 100px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  /* border: 1px solid rgb(38, 0, 255); */
+}
+
+.data-container {
+  width: 100%;
+  margin: auto;
   display: flex;
   flex-direction: row;
-  padding: 50px 100px;
-  /* border: 1px solid black; */
+  /* border: 1px solid chartreuse; */
 }
 
 .divider1 {
@@ -23,17 +33,16 @@
   width: 60%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .bio {
   margin-bottom: 20px;
 }
 
-.table-title {
+.form-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 20px;
 }
 
 .image-container {
@@ -53,25 +62,28 @@ img {
   object-fit: cover;
 }
 
-.thead {
-  width: 250px;
-  min-width: 100px;
-}
-
-.td {
-  width: 350px;
-  min-width: 100px;
-}
-
 .icon {
   margin-right: 10px;
+}
+
+.input {
+  padding: 12px 12px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin: 20px 0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
+  cursor: default;
+}
+
+.input:focus {
+  outline: none;
 }
 
 @media only screen and (max-width: 980px) {
   .container {
     padding-top: 150px;
     margin: auto;
-    width: 90vw;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -81,11 +93,24 @@ img {
     min-width: 500px;
   }
 
+  .image-container {
+    margin-top: 50px;
+  }
+  .form {
+    width: 75%;
+  }
+
+  .data-container {
+    flex-direction: column;
+  }
   .divider1 {
-    width: 80%;
+    width: 100%;
   }
 
   .divider2 {
-    width: 80%;
+    width: 100%;
+  }
+  .input {
+    width: 100%;
   }
 }

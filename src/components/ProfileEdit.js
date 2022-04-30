@@ -63,8 +63,10 @@ function ProfileEdit(props) {
       axios
         .post(URL_API + `/users/${props.userId}/upload-img`, formData)
         .then((res) => {
-          alert(res.data.message);
+          // alert(res.data.message);
           props.authLogin({ imageUrl: res.data.imageUrl });
+          setShow(true);
+          setAddFile(null);
         })
         .catch((err) => {
           console.log("kena error");
@@ -249,7 +251,7 @@ function ProfileEdit(props) {
               Full Name
             </label>
             <input
-              type="fullname"
+              type="text"
               name="fullname"
               id="fullname"
               placeholder="Your fullname..."
@@ -269,7 +271,7 @@ function ProfileEdit(props) {
               Username
             </label>
             <input
-              type="username"
+              type="text"
               name="username"
               id="username"
               placeholder="Your username..."
@@ -289,7 +291,7 @@ function ProfileEdit(props) {
               Bio
             </label>
             <input
-              type="bio"
+              type="text"
               name="bio"
               id="bio"
               placeholder="Your bio..."

@@ -4,9 +4,18 @@ import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { IoRestaurantOutline } from "react-icons/io5";
 import styles from "./NavigationBar.module.css";
 import { connect } from "react-redux";
+import { authLogin } from "../actions";
+import { INITIAL_STATE } from "../reducers/authReducer";
 
 function NavigationBar(props) {
   console.log("PROPS", props.userId);
+  const logoutHandler = () => {
+    localStorage.removeItem("token_shutter");
+    props.authLogin({
+      ...INITIAL_STATE,
+    });
+    console.log(INITIAL_STATE);
+  };
   return (
     <Navbar bg="light" expand="lg" fixed="top">
       <Container>
@@ -34,7 +43,7 @@ function NavigationBar(props) {
               </Link>
             </Nav.Link>
           </Nav>
-          {props.userId == null && (
+          {props.userId == null ? (
             <Nav>
               <Link to="/login" className={styles.login}>
                 Login
@@ -43,12 +52,24 @@ function NavigationBar(props) {
                 Register
               </Link>
             </Nav>
+          ) : (
+            <Nav>
+              <Link to="/" onClick={logoutHandler} className={styles.login}>
+                Logout
+              </Link>
+            </Nav>
           )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    authLogin: (dataEdit) => dispatch(authLogin(dataEdit)),
+  };
+};
+
 const mapStateToProps = (state) => {
   return {
     userId: state.authReducer.userId,
@@ -58,4 +79,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(NavigationBar);
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
