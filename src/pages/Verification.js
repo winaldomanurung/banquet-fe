@@ -10,24 +10,24 @@ function Verification() {
   const [isVerified, setIsVerified] = useState(false);
   console.log(params);
 
-  // useEffect(() => {
-  //   axios
-  //     .patch(
-  //       `${URL_API}/users/verify`,
-  //       {},
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${params.token}`,
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       setIsVerified(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .patch(
+        `${URL_API}/users/verify`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${params.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        setIsVerified(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles["message-box"]}>

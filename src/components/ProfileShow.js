@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "./ProfileShow.module.css";
-import profpic from "../img/profpic.png";
+import profpicDefault from "../img/profpicDefault.png";
 import { connect } from "react-redux";
 import { Table } from "react-bootstrap";
 import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { MdOutlineVerifiedUser } from "react-icons/md";
+import { URL_API } from "../helpers";
 
 function ProfileShow(props) {
   console.log(props.username);
@@ -14,7 +15,12 @@ function ProfileShow(props) {
       {/* Divider */}
       <div className={styles.divider1}>
         <div className={styles["image-container"]}>
-          <img className={styles.image} src={profpic} />
+          <img
+            className={styles.image}
+            src={
+              props.imageUrl != null ? URL_API + props.imageUrl : profpicDefault
+            }
+          />
         </div>
         <div className={styles.bio}>{props.bio}</div>
       </div>

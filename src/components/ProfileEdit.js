@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { URL_API } from "../helpers";
 import styles from "./ProfileEdit.module.css";
-import profpic from "../img/profpic.png";
+import profpicDefault from "../img/profpicDefault.png";
 import { connect } from "react-redux";
 import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
 import { BsChatLeftQuote } from "react-icons/bs";
@@ -20,14 +20,14 @@ function ProfileEdit(props) {
   const toggleShow = () => setShow(!show);
 
   // Untuk upload file logic
-  const [addFilename, setAddFilename] = useState("");
+  // const [addFilename, setAddFilename] = useState("");
   const [addFile, setAddFile] = useState(null);
 
   const onBtnAddFile = (e) => {
     console.log(e);
     console.log(e.target.files[0]);
     if (e.target.files[0]) {
-      setAddFilename(e.target.files[0].name);
+      // setAddFilename(e.target.files[0].name);
       setAddFile(e.target.files[0]);
       //untuk preview image
       let preview = document.getElementById("imgpreview");
@@ -36,19 +36,6 @@ function ProfileEdit(props) {
   };
   // CHECKPOINT
   console.log("DATA ALBUM: ", props.dataAlbum);
-
-  const getDataAlbum = () => {
-    axios
-      .get(URL_API + "/upload/get")
-      .then((res) => {
-        console.log("res.data", res.data.data);
-        props.getAlbum(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log("gagal fetch");
-      });
-  };
 
   const onBtnUpload = () => {
     //cek apa file sudah ada
@@ -71,32 +58,20 @@ function ProfileEdit(props) {
 
       //kita masukkan file nya
       formData.append("file", addFile);
-
+      console.log("berhasil append");
       // buat requestnya
       axios
-        .post(URL_API + "/upload", formData)
+        .post(URL_API + `/users/${props.userId}/upload-img`, formData)
         .then((res) => {
-          getDataAlbum();
           alert(res.data.message);
+          props.authLogin({ imageUrl: res.data.imageUrl });
         })
         .catch((err) => {
+          console.log("kena error");
           console.log(err);
         });
     }
   };
-
-  console.log("DATA ALBUM", props.dataAlbum);
-  const printCard = () => {
-    let dataAlbum = props.dataAlbum;
-    console.log("dataAlbum", dataAlbum);
-    return dataAlbum.map((item, index) => {
-      return <img src={item.image}></img>;
-    });
-  };
-
-  useEffect(() => {
-    getDataAlbum();
-  }, []);
 
   // Logic upload selesai
 
@@ -126,7 +101,7 @@ function ProfileEdit(props) {
     inputBlurHandler: fullnameBlurHandler,
     reset: resetFullnameInput,
     isTouched: isFullnameTouched,
-  } = useInput(fullnameValidation, props.fullname);
+  } = useInput(fullnameValidation, props.fullname ? props.fullname : "");
 
   const {
     value: enteredUsername,
@@ -176,11 +151,15 @@ function ProfileEdit(props) {
     // if (!formIsValid) {
     //   return;
     // }
+    console.log(props.fullname);
+    console.log(props.username);
+    console.log(props.bio);
+
     axios
       .patch(URL_API + `/users/${props.userId}`, {
-        fullname: enteredFullname,
-        username: enteredUsername,
-        bio: enteredBio,
+        fullname: enteredFullname || props.fullname,
+        username: enteredUsername || props.username,
+        bio: enteredBio || props.bio,
       })
       .then((res) => {
         console.log("res.data.dataEdit", res.data.dataEdit);
@@ -190,6 +169,18 @@ function ProfileEdit(props) {
       })
       .catch((err) => console.log(err));
   };
+
+  const submitLogic = () => {
+    if (
+      enteredUsername == props.username &&
+      enteredFullname == props.fullname &&
+      enteredBio == props.bio
+    ) {
+      return false;
+    }
+    return true;
+  };
+  console.log(submitLogic());
 
   return (
     <div className={styles.container}>
@@ -206,27 +197,41 @@ function ProfileEdit(props) {
         <div className={styles["data-container"]}>
           <div className={styles.divider1}>
             <div className={styles["image-container"]}>
-              <img className={styles.image} src={profpic} />
+              <img
+                id="imgpreview"
+                className={styles.image}
+                src={
+                  props.imageUrl != null
+                    ? URL_API + props.imageUrl
+                    : profpicDefault
+                }
+              />
             </div>
-            <button className={styles.change}>Change image</button>
-
-            {/* IMAGE UPLOAD */}
-            {/* Kita simpan file gambar yang akan diupload ke dalam state. Dari state, nantinya gambar di previe, baru diupload ketika button ADD dijalankan. */}
-            <div>
-              <label htmlFor="img">Image</label>
-              <input type="file" id="img" onChange={onBtnAddFile} />
-            </div>
-            <div className="col-md-3">
-              <img id="imgpreview" width="100%" />
-            </div>
-            {/* CHECKPOINT */}
-
-            <div className={styles.change} onClick={onBtnUpload}>
-              Change image
-            </div>
-
-            <div className="row container m-auto">{printCard()}</div>
-            {/* IMAGE UPLOAD */}
+            {!addFile ? (
+              <div>
+                <label htmlFor="img" className={styles.change}>
+                  Change Image
+                </label>
+                <input
+                  type="file"
+                  id="img"
+                  onChange={onBtnAddFile}
+                  style={{
+                    display: "none",
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                className={styles.change}
+                onClick={onBtnUpload}
+                style={{
+                  background: "#2175f3",
+                }}
+              >
+                Save Image
+              </div>
+            )}
           </div>
 
           <div className={styles["divider2"]}>
@@ -249,10 +254,10 @@ function ProfileEdit(props) {
               id="fullname"
               placeholder="Your fullname..."
               className={`${styles.input} ${fullnameInputClasses}`}
-              defaultValue="dsa"
+              defaultValue={props.fullname}
               onChange={fullnameChangeHandler}
               onBlur={fullnameBlurHandler}
-              value={enteredFullname}
+              value={props.fullname != "" ? enteredFullname : props.username}
             />
 
             <label for="username">
@@ -292,38 +297,19 @@ function ProfileEdit(props) {
               defaultValue={props.bio}
               onChange={bioChangeHandler}
               onBlur={bioBlurHandler}
-              value={enteredBio}
+              value={props.bio != "" ? enteredBio : props.username}
             />
-
-            {/* <label for="credential">
-              <BsChatLeftQuote
-                size={"1.2em"}
-                color="#414141"
-                className={styles.icon}
-              />
-              Image
-            </label>
-            <input
-              type="credential"
-              name="credential"
-              id="credential"
-              placeholder="Your username..."
-              className={styles.input}
-              defaultValue={props.imageUrl}
-
-              // onChange={credentialChangeHandler}
-              // onBlur={credentialBlurHandler}
-              // value={enteredCredential}
-            /> */}
           </div>
         </div>
-        <button
-          type="submit"
-          className={formIsValid ? styles.edit : styles["edit-disabled"]}
-          // className={styles.edit}
-        >
-          Submit
-        </button>
+        {formIsValid && submitLogic() ? (
+          <button type="submit" className={styles.edit}>
+            Submit
+          </button>
+        ) : (
+          <button type="submit" className={styles["edit-disabled"]} disabled>
+            Submit
+          </button>
+        )}
       </form>
     </div>
   );

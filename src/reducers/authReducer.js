@@ -5,7 +5,7 @@ const INITIAL_STATE = {
   email: "",
   isVerified: "",
   bio: "",
-  imageUrl: "",
+  imageUrl: null,
 };
 
 export const authReducer = (state = INITIAL_STATE, action) => {
