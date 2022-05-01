@@ -1,12 +1,12 @@
 import React from "react";
 import { RiLockPasswordLine, RiErrorWarningFill } from "react-icons/ri";
-import styles from "./ProfileResetPass.module.css";
+import styles from "./PasswordForget.module.css";
 import useInput from "../hooks/useInput";
 import axios from "axios";
 import { URL_API } from "../helpers";
 import { connect } from "react-redux";
 
-function ProfileResetPass(props) {
+function PasswordForget(props) {
   let formIsValid = false;
 
   const emailValidation = (email) =>
@@ -58,7 +58,7 @@ function ProfileResetPass(props) {
         <div className={styles.logo}>
           <RiLockPasswordLine size={"2.5em"} color="#2175f3" />
         </div>
-        <h1 className={styles.title}>Reset your password?</h1>
+        <h1 className={styles.title}>Forget your password?</h1>
         <form className={styles.form} onSubmit={formSubmissionHandler}>
           <div>
             Enter your email address and we'll send you a link to reset your
@@ -85,7 +85,7 @@ function ProfileResetPass(props) {
             type="submit"
             className={formIsValid ? styles.reset : styles["reset-disabled"]}
           >
-            Reset Password
+            Submit
           </button>
         </form>
       </div>
@@ -101,4 +101,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ProfileResetPass);
+export default connect(mapStateToProps)(PasswordForget);

@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Verification from "./pages/Verification";
 import Profile from "./pages/Profile";
 import PasswordReset from "./pages/PasswordReset";
+import PasswordForget from "./pages/PasswordForget";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/restaurants" element={<Restaurants />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forget-password" element={<PasswordForget />} />
         <Route path="/register" element={<Register />} />
         {/* Menjalankan request ke API kita untuk patch dengan routing /verify*/}
         <Route path="/authentication/:token" element={<Verification />} />

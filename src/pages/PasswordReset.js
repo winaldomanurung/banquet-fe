@@ -89,7 +89,7 @@ function PasswordReset() {
 
   return (
     <div className={styles.container}>
-      <div className={styles["message-box"]}>
+      <div className={styles["reset-form"]}>
         <h1 className={styles.title}>Reset Password</h1>
         <hr />
         <div className={styles.logo}>

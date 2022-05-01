@@ -126,7 +126,7 @@ function Login(props) {
             onBlur={passwordBlurHandler}
             value={enteredPassword}
           />
-          <Link to="/reset-password" className={styles.register}>
+          <Link to="/forget-password" className={styles.register}>
             Forgot your password?
           </Link>
 
