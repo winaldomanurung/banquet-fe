@@ -67,6 +67,7 @@
 }
 
 .nav-icon {
+  margin-left: 5px;
   color: aqua;
 }
 
@@ -78,6 +79,6 @@
 
   .nav-item {
     text-decoration: none;
-    padding: 0px;
+    padding: 0px 10px;
   }
 }

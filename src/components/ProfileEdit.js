@@ -299,7 +299,7 @@ function ProfileEdit(props) {
               defaultValue={props.bio}
               onChange={bioChangeHandler}
               onBlur={bioBlurHandler}
-              value={props.bio != "" ? enteredBio : props.username}
+              value={props.bio != "" ? enteredBio : props.bio}
             />
           </div>
         </div>

@@ -26,6 +26,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: auto;
+  padding-right: 100px;
 }
 
 .divider2 {
@@ -37,6 +39,7 @@
 
 .bio {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .form-title {
@@ -71,7 +74,7 @@ img {
   border-radius: 10px;
   font-size: 0.8em;
   margin: 20px 0;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   border: none;
   cursor: default;
 }
@@ -104,6 +107,7 @@ img {
     flex-direction: column;
   }
   .divider1 {
+    padding-right: 0;
     width: 100%;
   }
 
