@@ -34,7 +34,7 @@ function ProfileResetPass(props) {
       return;
     }
     axios
-      .post(URL_API + "/users/register", {
+      .post(URL_API + `/users/reset-password/${props.userId}`, {
         email: enteredEmail,
       })
       .then((res) => console.log(res.data))
@@ -85,7 +85,6 @@ function ProfileResetPass(props) {
           <button
             type="submit"
             className={formIsValid ? styles.reset : styles["reset-disabled"]}
-            disabled
           >
             Reset Password
           </button>
@@ -97,14 +96,13 @@ function ProfileResetPass(props) {
           </div>
         </form>
       </div>
-
-      <label htmlFor="email"></label>
     </div>
   );
 }
 
 const mapStateToProps = (state) => {
   return {
+    userId: state.authReducer.userId,
     username: state.authReducer.username,
     email: state.authReducer.email,
   };

@@ -259,7 +259,7 @@ function ProfileEdit(props) {
               defaultValue={props.fullname}
               onChange={fullnameChangeHandler}
               onBlur={fullnameBlurHandler}
-              value={props.fullname != "" ? enteredFullname : props.username}
+              value={enteredFullname}
             />
 
             <label for="username">
@@ -299,7 +299,7 @@ function ProfileEdit(props) {
               defaultValue={props.bio}
               onChange={bioChangeHandler}
               onBlur={bioBlurHandler}
-              value={props.bio != "" ? enteredBio : props.bio}
+              value={props.bio != "" ? props.bio : enteredBio}
             />
           </div>
         </div>

@@ -85,6 +85,7 @@ function LoginForm() {
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
+    console.log(formIsValid);
     if (!formIsValid) {
       return;
     }
@@ -192,7 +193,6 @@ function LoginForm() {
             className={
               formIsValid ? styles.register : styles["register-disabled"]
             }
-            disabled
           >
             Sign Up
           </button>

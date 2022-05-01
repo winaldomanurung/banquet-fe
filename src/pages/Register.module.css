@@ -71,6 +71,10 @@ input:focus::placeholder {
   width: 100%;
 }
 
+.register-disabled:hover {
+  cursor: not-allowed;
+}
+
 .login {
   text-decoration: none;
   color: #2175f3;
