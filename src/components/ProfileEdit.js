@@ -13,7 +13,7 @@ import { authLogin } from "../actions";
 import { getSuccess, getError, getLoading } from "../actions";
 import ErrorModal from "./ErrorModal";
 import SuccessModal from "./SuccessModal";
-import { Spinner } from "react-bootstrap";
+import Spinner from "./Spinner";
 
 function ProfileEdit(props) {
   console.log(props);
@@ -60,20 +60,26 @@ function ProfileEdit(props) {
       formData.append("file", addFile);
       console.log("berhasil append");
       // buat requestnya
+      props.getLoading(true);
       axios
         .post(URL_API + `/users/${props.userId}/upload-img`, formData)
         .then((res) => {
           // alert(res.data.message);
-          props.getLoading(true);
-          props.authLogin({ imageUrl: res.data.imageUrl });
+          console.log(res);
+
+          props.authLogin({ imageUrl: res.data.dataUser });
           setAddFile(null);
           props.getLoading(false);
-          props.getSuccess(true);
+          props.getSuccess(true, res.data.subject, res.data.message);
         })
         .catch((err) => {
           console.log("nyampe");
           props.getLoading(false);
-          props.getError(true);
+          props.getError(
+            true,
+            err.response.data.subject,
+            err.response.data.message
+          );
           console.log("kena error");
           console.log(err);
         });
@@ -172,15 +178,18 @@ function ProfileEdit(props) {
       })
       .then((res) => {
         console.log("res.data.dataEdit", res.data.dataEdit);
-        setRedirect(true);
-        props.authLogin(res.data.dataEdit);
-        props.getSuccess(true);
-        console.log(props.isSuccess);
+
+        props.authLogin(res.data.dataUser);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log("nyampe");
         props.getLoading(false);
-        props.getError(true);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
         console.log("kena error");
         console.log(err);
 
@@ -202,10 +211,11 @@ function ProfileEdit(props) {
 
   return (
     <div className={styles.container}>
+      {props.isLoading ? <Spinner /> : ""}
       {props.isError ? (
         <ErrorModal
-          title="Edit profile failed"
-          message="Operation failed!"
+          title={props.errorSubject}
+          message={props.errorMessage}
           onConfirm={() => props.getError(false)}
         />
       ) : (
@@ -213,9 +223,12 @@ function ProfileEdit(props) {
       )}
       {props.isSuccess ? (
         <SuccessModal
-          title="Edit profile success"
-          message="Edit data is saved!"
-          onConfirm={() => props.getSuccess(false)}
+          title={props.successSubject}
+          message={props.successMessage}
+          onConfirm={() => {
+            props.getSuccess(false);
+            setRedirect(true);
+          }}
         />
       ) : (
         ""
@@ -344,9 +357,11 @@ function ProfileEdit(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    authLogin: (dataEdit) => dispatch(authLogin(dataEdit)),
-    getError: (status) => dispatch(getError(status)),
-    getSuccess: (status) => dispatch(getSuccess(status)),
+    authLogin: (dataLogin) => dispatch(authLogin(dataLogin)),
+    getError: (status, errorSubject, errorMessage) =>
+      dispatch(getError(status, errorSubject, errorMessage)),
+    getSuccess: (status, successSubject, successMessage) =>
+      dispatch(getSuccess(status, successSubject, successMessage)),
     getLoading: (status) => dispatch(getLoading(status)),
   };
 };
@@ -363,6 +378,10 @@ const mapStateToProps = (state) => {
     isError: state.statusReducer.isError,
     isSuccess: state.statusReducer.isSuccess,
     isLoading: state.statusReducer.isLoading,
+    errorSubject: state.statusReducer.errorSubject,
+    successSubject: state.statusReducer.successSubject,
+    errorMessage: state.statusReducer.errorMessage,
+    successMessage: state.statusReducer.successMessage,
   };
 };
 

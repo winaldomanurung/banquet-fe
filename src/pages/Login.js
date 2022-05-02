@@ -8,6 +8,10 @@ import useInput from "../hooks/useInput";
 import { URL_API } from "../helpers";
 import { connect } from "react-redux";
 import { authLogin } from "../actions";
+import { getSuccess, getError, getLoading } from "../actions";
+import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
+import Spinner from "../components/Spinner";
 
 function Login(props) {
   // console.log("props: ", props);
@@ -68,32 +72,64 @@ function Login(props) {
     if (!formIsValid) {
       return;
     }
+    props.getLoading(true);
     axios
       .post(URL_API + "/users/login", {
         credential: enteredCredential,
         password: enteredPassword,
       })
       .then((res) => {
-        console.log("res.data.dataLogin: ", res.data.dataLogin);
+        console.log(res);
         // res.data.dataLogin akan kita kirim ke dalam Redux
         localStorage.setItem("token_shutter", res.data.token);
-        props.authLogin(res.data.dataLogin);
-        setRedirect(true);
+        props.authLogin(res.data.dataUser);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
         resetCredentialInput();
         resetPasswordInput();
         console.log("props: ", props);
       })
       .catch((err) => {
-        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+        console.log(err.response.data.subject);
+        console.log(err.response.data.message);
       });
     resetCredentialInput();
     resetPasswordInput();
   };
-
+  console.log(props.errorSubject);
+  console.log(props.errorMessage);
   backToHome();
 
   return (
     <div className={styles.container}>
+      {props.isLoading ? <Spinner /> : ""}
+      {props.isError ? (
+        <ErrorModal
+          title={props.errorSubject}
+          message={props.errorMessage}
+          onConfirm={() => props.getError(false)}
+        />
+      ) : (
+        ""
+      )}
+      {props.isSuccess ? (
+        <SuccessModal
+          title={props.successSubject}
+          message={props.successMessage}
+          onConfirm={() => {
+            props.getSuccess(false);
+            setRedirect(true);
+          }}
+        />
+      ) : (
+        ""
+      )}
       <div className={styles["login-form"]}>
         <div className={styles.logo}>
           <IoRestaurantOutline size={"2.5em"} color="#2175f3" />
@@ -154,12 +190,24 @@ const mapStateToProps = (state) => {
     username: state.authReducer.username,
     email: state.authReducer.email,
     isVerified: state.authReducer.isVerified,
+    isError: state.statusReducer.isError,
+    isSuccess: state.statusReducer.isSuccess,
+    isLoading: state.statusReducer.isLoading,
+    errorSubject: state.statusReducer.errorSubject,
+    successSubject: state.statusReducer.successSubject,
+    errorMessage: state.statusReducer.errorMessage,
+    successMessage: state.statusReducer.successMessage,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     authLogin: (dataLogin) => dispatch(authLogin(dataLogin)),
+    getError: (status, errorSubject, errorMessage) =>
+      dispatch(getError(status, errorSubject, errorMessage)),
+    getSuccess: (status, successSubject, successMessage) =>
+      dispatch(getSuccess(status, successSubject, successMessage)),
+    getLoading: (status) => dispatch(getLoading(status)),
   };
 };
 

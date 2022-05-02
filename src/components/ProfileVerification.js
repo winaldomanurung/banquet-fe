@@ -4,21 +4,59 @@ import { MdEmail, MdMarkEmailRead } from "react-icons/md";
 import { connect } from "react-redux";
 import axios from "axios";
 import { URL_API } from "../helpers";
+import { getSuccess, getError, getLoading } from "../actions";
+import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
+import Spinner from "../components/Spinner";
 
 function ProfileVerification(props) {
   const sendEmail = (event) => {
     event.preventDefault();
+    props.getLoading(true);
 
     axios
       .post(URL_API + `/users/${props.userId}/verify`, {
         email: props.email,
       })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        console.log(res.data);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
   };
 
   return (
     <div className={styles.container}>
+      {props.isLoading ? <Spinner /> : ""}
+      {props.isError ? (
+        <ErrorModal
+          title={props.errorSubject}
+          message={props.errorMessage}
+          onConfirm={() => props.getError(false)}
+        />
+      ) : (
+        ""
+      )}
+      {props.isSuccess ? (
+        <SuccessModal
+          title={props.successSubject}
+          message={props.successMessage}
+          onConfirm={() => {
+            props.getSuccess(false);
+          }}
+        />
+      ) : (
+        ""
+      )}
       {props.isVerified ? (
         <div>
           <div className={styles.logo}>
@@ -57,7 +95,27 @@ const mapStateToProps = (state) => {
     username: state.authReducer.username,
     isVerified: state.authReducer.isVerified,
     email: state.authReducer.email,
+    isError: state.statusReducer.isError,
+    isSuccess: state.statusReducer.isSuccess,
+    isLoading: state.statusReducer.isLoading,
+    errorSubject: state.statusReducer.errorSubject,
+    successSubject: state.statusReducer.successSubject,
+    errorMessage: state.statusReducer.errorMessage,
+    successMessage: state.statusReducer.successMessage,
   };
 };
 
-export default connect(mapStateToProps)(ProfileVerification);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getError: (status, errorSubject, errorMessage) =>
+      dispatch(getError(status, errorSubject, errorMessage)),
+    getSuccess: (status, successSubject, successMessage) =>
+      dispatch(getSuccess(status, successSubject, successMessage)),
+    getLoading: (status) => dispatch(getLoading(status)),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfileVerification);

@@ -6,8 +6,13 @@ import { IoRestaurantOutline } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { URL_API } from "../helpers";
 import useInput from "../hooks/useInput";
+import { connect } from "react-redux";
+import { getSuccess, getError, getLoading } from "../actions";
+import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
+import Spinner from "../components/Spinner";
 
-function LoginForm() {
+function RegisterForm(props) {
   // Validation schema untuk masing-masing field
   //Basic
   // const usernameValidation = (username) =>
@@ -89,6 +94,8 @@ function LoginForm() {
     if (!formIsValid) {
       return;
     }
+    props.getLoading(true);
+
     axios
       .post(URL_API + "/users/register", {
         username: enteredUsername,
@@ -96,13 +103,24 @@ function LoginForm() {
         password: enteredPassword,
         repeat_password: enteredRepeatPassword,
       })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-
-    resetUsernameInput();
-    resetEmailInput();
-    resetPasswordInput();
-    resetRepeatPasswordInput();
+      .then((res) => {
+        console.log(res.data);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
+        resetUsernameInput();
+        resetEmailInput();
+        resetPasswordInput();
+        resetRepeatPasswordInput();
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
   };
 
   // Pembuatan class untuk error case
@@ -133,6 +151,27 @@ function LoginForm() {
 
   return (
     <div className={styles.container}>
+      {props.isLoading ? <Spinner /> : ""}
+      {props.isError ? (
+        <ErrorModal
+          title={props.errorSubject}
+          message={props.errorMessage}
+          onConfirm={() => props.getError(false)}
+        />
+      ) : (
+        ""
+      )}
+      {props.isSuccess ? (
+        <SuccessModal
+          title={props.successSubject}
+          message={props.successMessage}
+          onConfirm={() => {
+            props.getSuccess(false);
+          }}
+        />
+      ) : (
+        ""
+      )}
       <div className={styles["login-form"]}>
         <div className={styles.logo}>
           <IoRestaurantOutline size={"2.5em"} color="#2175f3" />
@@ -208,4 +247,26 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+const mapStateToProps = (state) => {
+  return {
+    isError: state.statusReducer.isError,
+    isSuccess: state.statusReducer.isSuccess,
+    isLoading: state.statusReducer.isLoading,
+    errorSubject: state.statusReducer.errorSubject,
+    successSubject: state.statusReducer.successSubject,
+    errorMessage: state.statusReducer.errorMessage,
+    successMessage: state.statusReducer.successMessage,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getError: (status, errorSubject, errorMessage) =>
+      dispatch(getError(status, errorSubject, errorMessage)),
+    getSuccess: (status, successSubject, successMessage) =>
+      dispatch(getSuccess(status, successSubject, successMessage)),
+    getLoading: (status) => dispatch(getLoading(status)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterForm);
