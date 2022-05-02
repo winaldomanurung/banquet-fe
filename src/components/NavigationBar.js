@@ -17,7 +17,7 @@ function NavigationBar(props) {
     console.log(INITIAL_STATE);
   };
   return (
-    <Navbar bg="light" expand="lg" fixed="top">
+    <Navbar collapseOnSelect bg="light" expand="lg" fixed="top">
       <Container>
         <Navbar.Brand href="/" className="my-auto">
           <IoRestaurantOutline size={"1.5em"} color="#2175f3" />
@@ -26,7 +26,7 @@ function NavigationBar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link>
+            <Nav.Link eventKey="1">
               <Link
                 to="/restaurants"
                 style={{ textDecoration: "none", color: "#0b0b0b" }}
@@ -34,7 +34,7 @@ function NavigationBar(props) {
                 Restaurants
               </Link>
             </Nav.Link>
-            <Nav.Link>
+            <Nav.Link eventKey="2">
               <Link
                 to="/about"
                 style={{ textDecoration: "none", color: "#0b0b0b" }}
@@ -45,12 +45,16 @@ function NavigationBar(props) {
           </Nav>
           {props.userId == null ? (
             <Nav>
-              <Link to="/login" className={styles.login}>
-                Login
-              </Link>
-              <Link to="/register" className={styles.register}>
-                Register
-              </Link>
+              <Nav.Link eventKey="3" className={styles.login}>
+                <Link className={styles["login-link"]} to="/login">
+                  Login
+                </Link>
+              </Nav.Link>
+              <Nav.Link eventKey="4" className={styles.register}>
+                <Link to="/register" className={styles["register-link"]}>
+                  Register
+                </Link>
+              </Nav.Link>
             </Nav>
           ) : (
             <Nav>

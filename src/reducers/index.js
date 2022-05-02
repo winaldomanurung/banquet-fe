@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import { authReducer } from "./authReducer";
-import { albumReducer } from "./albumReducer";
+import { statusReducer } from "./statusReducer";
 
 export const Reducers = combineReducers({
   authReducer,
-  albumReducer,
+  statusReducer,
 });

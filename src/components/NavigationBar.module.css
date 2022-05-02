@@ -1,4 +1,4 @@
-.login {
+/* .login {
   padding: 8px 15px;
   margin: auto 15px;
   background-color: #2175f3;
@@ -6,39 +6,102 @@
   text-decoration: none;
   border-radius: 5px;
   transition: all 0.5s ease-in-out;
+} */
+
+/* .login:hover {
+  background-color: #1e66d3;
+} */
+
+.login-link {
+  padding: 8px 15px;
+  margin: auto;
+  background-color: #2175f3;
+  color: white;
+  text-decoration: none;
+  z-index: 1;
+  border-radius: 5px;
+  transition: background-color 0.5s ease-in-out;
 }
 
-.login:hover {
+.login-link:hover {
   color: white;
   background-color: #1e66d3;
 }
 
-.register {
+/* .register {
   padding: 8px 15px;
   border: 1px solid #2175f3;
   color: #2175f3;
   text-decoration: none;
   border-radius: 5px;
   transition: all 0.5s ease-in-out;
+} */
+
+/* .register:hover {
+  color: white;
+  background-color: #2175f3;
+} */
+
+.register-link {
+  border: 1px solid #2175f3;
+  padding: 8px 15px;
+  text-decoration: none;
+  border-radius: 5px;
+  color: #2175f3;
+  transition: all 0.5s ease-in-out;
+  z-index: 1;
 }
 
-.register:hover {
+.register-link:hover {
   color: white;
   background-color: #2175f3;
 }
 
+.register:hover .register-link {
+  color: white;
+}
+
 @media only screen and (max-width: 991px) {
-  .login {
-    padding: 8px 15px;
-    margin-bottom: 10px;
+  .login-link {
+    padding: 8px 27px;
+    margin-bottom: 50px;
     margin-left: 0;
+    /* max-width: 100px; */
+    text-align: center;
+    width: 500px;
+  }
+
+  .register-link {
+    margin-top: 50px;
+
+    padding: 8px 15px;
     max-width: 100px;
     text-align: center;
   }
 
-  .register {
-    padding: 8px 15px;
-    max-width: 100px;
-    text-align: center;
+  .login {
+    margin-bottom: 10px;
   }
+
+  /* .login-link {
+    color: white;
+    text-decoration: none;
+  } */
+
+  /* .login-link:hover {
+    color: white;
+  } */
+
+  /* .register-link {
+    color: #2175f3;
+    text-decoration: none;
+  } */
+
+  /* .register-link:hover {
+    color: white;
+  } */
+  /* 
+  .register:hover .register-link {
+    color: white;
+  } */
 }

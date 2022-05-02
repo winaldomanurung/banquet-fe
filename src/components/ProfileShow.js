@@ -4,7 +4,6 @@ import profpicDefault from "../img/profpicDefault.png";
 import { connect } from "react-redux";
 import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
 import { BsPatchCheck } from "react-icons/bs";
-
 import { URL_API } from "../helpers";
 
 function ProfileShow(props) {

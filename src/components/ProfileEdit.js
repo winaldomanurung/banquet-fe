@@ -10,14 +10,14 @@ import { RiErrorWarningFill } from "react-icons/ri";
 import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 import { authLogin } from "../actions";
-import { getAlbum } from "../actions";
-import ToastBootstrap from "./Toast";
+import { getSuccess, getError, getLoading } from "../actions";
+import ErrorModal from "./ErrorModal";
+import SuccessModal from "./SuccessModal";
+import { Spinner } from "react-bootstrap";
 
 function ProfileEdit(props) {
   console.log(props);
   const [redirect, setRedirect] = useState(false);
-  const [show, setShow] = useState(false);
-  const toggleShow = () => setShow(!show);
 
   // Untuk upload file logic
   // const [addFilename, setAddFilename] = useState("");
@@ -64,11 +64,16 @@ function ProfileEdit(props) {
         .post(URL_API + `/users/${props.userId}/upload-img`, formData)
         .then((res) => {
           // alert(res.data.message);
+          props.getLoading(true);
           props.authLogin({ imageUrl: res.data.imageUrl });
-          setShow(true);
           setAddFile(null);
+          props.getLoading(false);
+          props.getSuccess(true);
         })
         .catch((err) => {
+          console.log("nyampe");
+          props.getLoading(false);
+          props.getError(true);
           console.log("kena error");
           console.log(err);
         });
@@ -156,6 +161,8 @@ function ProfileEdit(props) {
     console.log(props.fullname);
     console.log(props.username);
     console.log(props.bio);
+    console.log(props.isSuccess);
+    console.log(props.isError);
 
     axios
       .patch(URL_API + `/users/${props.userId}`, {
@@ -167,9 +174,18 @@ function ProfileEdit(props) {
         console.log("res.data.dataEdit", res.data.dataEdit);
         setRedirect(true);
         props.authLogin(res.data.dataEdit);
-        setShow(true);
+        props.getSuccess(true);
+        console.log(props.isSuccess);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log("nyampe");
+        props.getLoading(false);
+        props.getError(true);
+        console.log("kena error");
+        console.log(err);
+
+        console.log(err.response.data);
+      });
   };
 
   const submitLogic = () => {
@@ -186,16 +202,25 @@ function ProfileEdit(props) {
 
   return (
     <div className={styles.container}>
+      {props.isError ? (
+        <ErrorModal
+          title="Edit profile failed"
+          message="Operation failed!"
+          onConfirm={() => props.getError(false)}
+        />
+      ) : (
+        ""
+      )}
+      {props.isSuccess ? (
+        <SuccessModal
+          title="Edit profile success"
+          message="Edit data is saved!"
+          onConfirm={() => props.getSuccess(false)}
+        />
+      ) : (
+        ""
+      )}
       <form className={styles.form} onSubmit={formSubmissionHandler}>
-        {show ? (
-          <ToastBootstrap
-            title="Edit Profile"
-            message="Edit data is saved!"
-            show={show}
-            toggleShow={toggleShow}
-          />
-        ) : null}
-
         <div className={styles["data-container"]}>
           <div className={styles.divider1}>
             <div className={styles["image-container"]}>
@@ -320,7 +345,9 @@ function ProfileEdit(props) {
 const mapDispatchToProps = (dispatch) => {
   return {
     authLogin: (dataEdit) => dispatch(authLogin(dataEdit)),
-    getAlbum: (data) => dispatch(getAlbum(data)),
+    getError: (status) => dispatch(getError(status)),
+    getSuccess: (status) => dispatch(getSuccess(status)),
+    getLoading: (status) => dispatch(getLoading(status)),
   };
 };
 
@@ -333,7 +360,9 @@ const mapStateToProps = (state) => {
     isVerified: state.authReducer.isVerified,
     bio: state.authReducer.bio,
     imageUrl: state.authReducer.imageUrl,
-    dataAlbum: state.albumReducer.dataAlbum,
+    isError: state.statusReducer.isError,
+    isSuccess: state.statusReducer.isSuccess,
+    isLoading: state.statusReducer.isLoading,
   };
 };
 
