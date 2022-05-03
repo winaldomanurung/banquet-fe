@@ -93,6 +93,12 @@
   transition: all 0.3s ease-in-out;
 }
 
+.password-properties {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 @media only screen and (max-width: 768px) {
   .login-form {
     width: 90vw;

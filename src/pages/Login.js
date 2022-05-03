@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,15 +12,21 @@ import { getSuccess, getError, getLoading } from "../actions";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
+import FormCheck from "react-bootstrap/FormCheck";
 
 function Login(props) {
   // console.log("props: ", props);
   const [redirect, setRedirect] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const checkboxHandler = (event) => {
+    // console.log(event.target.checked);
+    setShowPassword(event.target.checked);
+  };
   let navigate = useNavigate();
   const backToHome = () => {
     if (redirect) {
       console.log("Redirect");
-      return navigate("/profile", { replace: true });
+      return navigate("/", { replace: true });
     }
   };
   const credentialValidation = (credential) =>
@@ -153,7 +159,7 @@ function Login(props) {
           />
           <label for="password">Password</label>
           <input
-            type="password"
+            type={!showPassword ? "password" : "text"}
             name="password"
             id="password"
             placeholder="Your password..."
@@ -162,9 +168,17 @@ function Login(props) {
             onBlur={passwordBlurHandler}
             value={enteredPassword}
           />
-          <Link to="/forget-password" className={styles.register}>
-            Forgot your password?
-          </Link>
+          <div className={styles["password-properties"]}>
+            <FormCheck
+              type="checkbox"
+              id="default-checkbox"
+              label="Show password"
+              onClick={checkboxHandler}
+            />
+            <Link to="/forget-password" className={styles.register}>
+              Forgot your password?
+            </Link>
+          </div>
 
           <button
             type="submit"

@@ -58,9 +58,15 @@ function NavigationBar(props) {
             </Nav>
           ) : (
             <Nav>
-              <Link to="/" onClick={logoutHandler} className={styles.login}>
-                Logout
-              </Link>
+              <Nav.Link eventKey="5" className={styles.logout}>
+                <Link
+                  to="/"
+                  onClick={logoutHandler}
+                  className={styles["logout-link"]}
+                >
+                  Logout
+                </Link>
+              </Nav.Link>
             </Nav>
           )}
         </Navbar.Collapse>

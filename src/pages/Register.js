@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styles from "./Register.module.css";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ import { getSuccess, getError, getLoading } from "../actions";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
+import { FormCheck } from "react-bootstrap";
 
 function RegisterForm(props) {
   // Validation schema untuk masing-masing field
@@ -33,6 +34,12 @@ function RegisterForm(props) {
     );
   const repeatPasswordValidation = (repeatPassword) =>
     repeatPassword == enteredPassword && repeatPassword.length != 0;
+
+  const [showPassword, setShowPassword] = useState(false);
+  const checkboxHandler = (event) => {
+    // console.log(event.target.checked);
+    setShowPassword(event.target.checked);
+  };
 
   // Handling field dengan custom hook useInput
   const {
@@ -147,7 +154,7 @@ function RegisterForm(props) {
     errorMessage = "";
   }
 
-  console.log(formIsValid);
+  // console.log(formIsValid);
 
   return (
     <div className={styles.container}>
@@ -206,7 +213,7 @@ function RegisterForm(props) {
           />
           <label for="password">Password</label>
           <input
-            type="password"
+            type={!showPassword ? "password" : "text"}
             name="password"
             id="password"
             placeholder="Your password..."
@@ -217,7 +224,7 @@ function RegisterForm(props) {
           />
           <label for="repeat-password">Repeat Password</label>
           <input
-            type="password"
+            type={!showPassword ? "password" : "text"}
             name="repeat-password"
             id="repeat-password"
             placeholder="Repeat your password..."
@@ -226,7 +233,12 @@ function RegisterForm(props) {
             onBlur={repeatPasswordBlurHandler}
             value={enteredRepeatPassword}
           />
-
+          <FormCheck
+            type="checkbox"
+            id="default-checkbox"
+            label="Show password"
+            onClick={checkboxHandler}
+          />
           <button
             type="submit"
             className={

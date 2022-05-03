@@ -5,6 +5,7 @@ import styles from "./PasswordReset.module.css";
 import { useParams } from "react-router-dom";
 import { RiLockPasswordLine, RiErrorWarningFill } from "react-icons/ri";
 import useInput from "../hooks/useInput";
+import { FormCheck } from "react-bootstrap";
 
 function PasswordReset() {
   const params = useParams();
@@ -15,6 +16,12 @@ function PasswordReset() {
     );
   const repeatPasswordValidation = (repeatPassword) =>
     repeatPassword == enteredPassword && repeatPassword.length != 0;
+
+  const [showPassword, setShowPassword] = useState(false);
+  const checkboxHandler = (event) => {
+    // console.log(event.target.checked);
+    setShowPassword(event.target.checked);
+  };
 
   const {
     value: enteredPassword,
@@ -106,7 +113,7 @@ function PasswordReset() {
           </p>
           <label for="password">Password</label>
           <input
-            type="password"
+            type={!showPassword ? "password" : "text"}
             name="password"
             id="password"
             placeholder="Your password..."
@@ -117,7 +124,7 @@ function PasswordReset() {
           />
           <label for="repeat-password">Repeat Password</label>
           <input
-            type="password"
+            type={!showPassword ? "password" : "text"}
             name="repeat-password"
             id="repeat-password"
             placeholder="Repeat your password..."
@@ -125,7 +132,13 @@ function PasswordReset() {
             onChange={repeatPasswordChangeHandler}
             onBlur={repeatPasswordBlurHandler}
             value={enteredRepeatPassword}
-          />{" "}
+          />
+          <FormCheck
+            type="checkbox"
+            id="default-checkbox"
+            label="Show password"
+            onClick={checkboxHandler}
+          />
           <button
             type="submit"
             className={formIsValid ? styles.submit : styles["submit-disabled"]}
