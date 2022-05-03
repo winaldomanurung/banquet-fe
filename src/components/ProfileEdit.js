@@ -169,6 +169,7 @@ function ProfileEdit(props) {
     console.log(props.bio);
     console.log(props.isSuccess);
     console.log(props.isError);
+    props.getLoading(true);
 
     axios
       .patch(URL_API + `/users/${props.userId}`, {
@@ -337,7 +338,7 @@ function ProfileEdit(props) {
               defaultValue={props.bio}
               onChange={bioChangeHandler}
               onBlur={bioBlurHandler}
-              value={props.bio != "" ? props.bio : enteredBio}
+              value={enteredBio}
             />
           </div>
         </div>

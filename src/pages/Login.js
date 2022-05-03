@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import styles from "./Login.module.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,8 +13,10 @@ import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
 import FormCheck from "react-bootstrap/FormCheck";
+import AuthContext from "../store/auth-context";
 
 function Login(props) {
+  const authCtx = useContext(AuthContext);
   // console.log("props: ", props);
   const [redirect, setRedirect] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +28,7 @@ function Login(props) {
   const backToHome = () => {
     if (redirect) {
       console.log("Redirect");
-      return navigate("/", { replace: true });
+      return navigate("/profile", { replace: true });
     }
   };
   const credentialValidation = (credential) =>
@@ -87,13 +89,22 @@ function Login(props) {
       .then((res) => {
         console.log(res);
         // res.data.dataLogin akan kita kirim ke dalam Redux
-        localStorage.setItem("token_shutter", res.data.token);
+
+        // localStorage.setItem("token_shutter", res.data.token);
+        // expTime dirubah ke string karena nantinya akan diubah authCtx jadi ms
+        console.log(res.data.token);
         props.authLogin(res.data.dataUser);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
+
         resetCredentialInput();
         resetPasswordInput();
-        console.log("props: ", props);
+        // console.log("props: ", props);
+        return res.data;
+      })
+      .then((res2) => {
+        const expirationTime = new Date(new Date().getTime() + 600 * 1000);
+        authCtx.login(res2.token, expirationTime.toISOString());
       })
       .catch((err) => {
         props.getLoading(false);
@@ -108,8 +119,8 @@ function Login(props) {
     resetCredentialInput();
     resetPasswordInput();
   };
-  console.log(props.errorSubject);
-  console.log(props.errorMessage);
+  // console.log(props.errorSubject);
+  // console.log(props.errorMessage);
   backToHome();
 
   return (

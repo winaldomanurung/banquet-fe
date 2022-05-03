@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { IoRestaurantOutline } from "react-icons/io5";
@@ -6,15 +6,21 @@ import styles from "./NavigationBar.module.css";
 import { connect } from "react-redux";
 import { authLogin } from "../actions";
 import { INITIAL_STATE } from "../reducers/authReducer";
+import AuthContext from "../store/auth-context";
 
 function NavigationBar(props) {
-  console.log("PROPS", props.userId);
+  // Check user login dengan menggunakan context
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+
+  // console.log("PROPS", props.userId);
   const logoutHandler = () => {
     localStorage.removeItem("token_shutter");
+    authCtx.logout();
     props.authLogin({
       ...INITIAL_STATE,
     });
-    console.log(INITIAL_STATE);
+    // console.log(INITIAL_STATE);
   };
   return (
     <Navbar collapseOnSelect bg="light" expand="lg" fixed="top">
@@ -43,7 +49,7 @@ function NavigationBar(props) {
               </Link>
             </Nav.Link>
           </Nav>
-          {props.userId == null ? (
+          {!isLoggedIn ? (
             <Nav>
               <Nav.Link eventKey="3" className={styles.login}>
                 <Link className={styles["login-link"]} to="/login">

@@ -10,8 +10,31 @@ import styles from "./Profile.module.css";
 import { FaUserAlt, FaUserEdit } from "react-icons/fa";
 import { GoVerified } from "react-icons/go";
 import { RiLockPasswordFill } from "react-icons/ri";
+import axios from "axios";
+import { URL_API } from "../helpers";
+import { useContext } from "react";
+import AuthContext from "../store/auth-context";
+import { authLogin } from "../actions";
+import { connect } from "react-redux";
 
-function Profile() {
+function Profile(props) {
+  const authCtx = useContext(AuthContext);
+  console.log(authCtx.token);
+
+  axios
+    .get(URL_API + "/users/retrieve-data", {
+      headers: {
+        "Auth-Token": authCtx.token,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      props.authLogin(res.data.dataUser);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
   const location = useLocation();
 
   const [isActivePath, setIsActivePath] = useState(location.pathname);
@@ -108,4 +131,22 @@ function Profile() {
   );
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authReducer.userId,
+    username: state.authReducer.username,
+    fullname: state.authReducer.fullname,
+    email: state.authReducer.email,
+    isVerified: state.authReducer.isVerified,
+    bio: state.authReducer.bio,
+    imageUrl: state.authReducer.imageUrl,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    authLogin: (dataLogin) => dispatch(authLogin(dataLogin)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

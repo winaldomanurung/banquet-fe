@@ -18,7 +18,7 @@ function Verification() {
         {},
         {
           headers: {
-            Authorization: `Bearer ${params.token}`,
+            "Auth-Token": `${params.token}`,
           },
         }
       )
