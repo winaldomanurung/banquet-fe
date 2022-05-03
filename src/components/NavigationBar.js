@@ -32,20 +32,24 @@ function NavigationBar(props) {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link eventKey="1">
+            {isLoggedIn ? (
+              <Nav.Link eventKey="1">
+                <Link
+                  to="/profile"
+                  style={{ textDecoration: "none", color: "#0b0b0b" }}
+                >
+                  My Profile
+                </Link>
+              </Nav.Link>
+            ) : (
+              ""
+            )}
+            <Nav.Link eventKey="2">
               <Link
                 to="/restaurants"
                 style={{ textDecoration: "none", color: "#0b0b0b" }}
               >
                 Restaurants
-              </Link>
-            </Nav.Link>
-            <Nav.Link eventKey="2">
-              <Link
-                to="/about"
-                style={{ textDecoration: "none", color: "#0b0b0b" }}
-              >
-                About Us
               </Link>
             </Nav.Link>
           </Nav>

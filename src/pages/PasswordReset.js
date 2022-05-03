@@ -17,6 +17,20 @@ function PasswordReset(props) {
   const params = useParams();
   let navigate = useNavigate();
 
+  axios
+    .get(URL_API + "/users/retrieve-data", {
+      headers: {
+        "Auth-Token": params.token,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+      return navigate("/", { replace: true });
+    });
+
   console.log(params);
   const passwordValidation = (password) =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(

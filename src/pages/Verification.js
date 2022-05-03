@@ -3,13 +3,29 @@ import React, { useEffect, useState } from "react";
 import { URL_API } from "../helpers";
 import styles from "./Verification.module.css";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdMarkEmailRead } from "react-icons/md";
 
 function Verification() {
   const params = useParams();
   const [isVerified, setIsVerified] = useState(false);
   console.log(params);
+
+  let navigate = useNavigate();
+
+  axios
+    .get(URL_API + "/users/retrieve-data", {
+      headers: {
+        "Auth-Token": params.token,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+      return navigate("/", { replace: true });
+    });
 
   useEffect(() => {
     axios
