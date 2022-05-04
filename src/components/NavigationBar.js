@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { IoRestaurantOutline } from "react-icons/io5";
+import { MdAdd } from "react-icons/md";
 import styles from "./NavigationBar.module.css";
 import { connect } from "react-redux";
 import { authLogin } from "../actions";
@@ -52,15 +53,28 @@ function NavigationBar(props) {
                 Restaurants
               </Link>
             </Nav.Link>
+            <Nav.Link eventKey="3">
+              <Link
+                to="/my-restaurants"
+                style={{ textDecoration: "none", color: "#0b0b0b" }}
+              >
+                My Restaurants
+              </Link>
+            </Nav.Link>
           </Nav>
           {!isLoggedIn ? (
             <Nav>
-              <Nav.Link eventKey="3" className={styles.login}>
+              <Nav.Link eventKey="7" className={styles.add}>
+                <Link className={styles["add-link"]} to="/add-restaurant">
+                  <MdAdd size={"1.5em"} color="white" /> Add Place
+                </Link>
+              </Nav.Link>
+              <Nav.Link eventKey="4" className={styles.login}>
                 <Link className={styles["login-link"]} to="/login">
                   Login
                 </Link>
               </Nav.Link>
-              <Nav.Link eventKey="4" className={styles.register}>
+              <Nav.Link eventKey="5" className={styles.register}>
                 <Link to="/register" className={styles["register-link"]}>
                   Register
                 </Link>
@@ -68,7 +82,7 @@ function NavigationBar(props) {
             </Nav>
           ) : (
             <Nav>
-              <Nav.Link eventKey="5" className={styles.logout}>
+              <Nav.Link eventKey="6" className={styles.logout}>
                 <Link
                   to="/"
                   onClick={logoutHandler}

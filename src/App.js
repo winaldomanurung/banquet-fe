@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import HeroSection from "./components/HeroSection";
 import NavigationBar from "./components/NavigationBar";
 import Restaurants from "./pages/Restaurants";
+import MyRestaurants from "./pages/MyRestaurants.js";
 import About from "./components/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -13,6 +14,8 @@ import PasswordReset from "./pages/PasswordReset";
 import PasswordForget from "./pages/PasswordForget";
 import { useContext } from "react";
 import AuthContext from "./store/auth-context";
+import AddRestaurant from "./pages/AddRestaurant";
+import RestaurantDetail from "./pages/RestaurantDetail";
 import axios from "axios";
 import { URL_API } from "./helpers";
 
@@ -27,7 +30,13 @@ function App() {
       <Routes>
         <Route path="/" element={<HeroSection />} />
         <Route path="/restaurants" element={<Restaurants />} />
+        <Route path="/my-restaurants" element={<MyRestaurants />} />
+        <Route
+          path="/my-restaurants/:restaurantId"
+          element={<RestaurantDetail />}
+        />
         <Route path="/about" element={<About />} />
+        <Route path="/add-restaurant" element={<AddRestaurant />} />
 
         {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
         {!authCtx.isLoggedIn && (
