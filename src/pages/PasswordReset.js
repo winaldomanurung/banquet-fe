@@ -17,6 +17,16 @@ function PasswordReset(props) {
   const params = useParams();
   let navigate = useNavigate();
 
+  console.log(props.isError);
+  const [redirect, setRedirect] = useState(false);
+
+  const backToHome = () => {
+    if (redirect) {
+      console.log("Redirect");
+      return navigate("/", { replace: true });
+    }
+  };
+
   axios
     .get(URL_API + "/users/retrieve-data", {
       headers: {
@@ -25,10 +35,17 @@ function PasswordReset(props) {
     })
     .then((res) => {
       console.log(res.data);
+      // props.getLoading(false);
     })
     .catch((err) => {
       console.log(err);
-      return navigate("/", { replace: true });
+      // return navigate("/", { replace: true });
+      // props.getLoading(false);
+      props.getError(
+        true,
+        err.response.data.subject,
+        err.response.data.message
+      );
     });
 
   console.log(params);
@@ -43,14 +60,6 @@ function PasswordReset(props) {
   const checkboxHandler = (event) => {
     // console.log(event.target.checked);
     setShowPassword(event.target.checked);
-  };
-  const [redirect, setRedirect] = useState(false);
-
-  const backToHome = () => {
-    if (redirect) {
-      console.log("Redirect");
-      return navigate("/", { replace: true });
-    }
   };
 
   const {
@@ -145,7 +154,10 @@ function PasswordReset(props) {
         <ErrorModal
           title={props.errorSubject}
           message={props.errorMessage}
-          onConfirm={() => props.getError(false)}
+          onConfirm={() => {
+            props.getError(false);
+            setRedirect(true);
+          }}
         />
       ) : (
         ""

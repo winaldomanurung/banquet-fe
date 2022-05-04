@@ -95,8 +95,8 @@ function Login(props) {
         console.log(res.data.token);
         props.authLogin(res.data.dataUser);
         props.getLoading(false);
-        props.getSuccess(true, res.data.subject, res.data.message);
-
+        // props.getSuccess(true, res.data.subject, res.data.message);
+        setRedirect(true);
         resetCredentialInput();
         resetPasswordInput();
         // console.log("props: ", props);
@@ -135,7 +135,7 @@ function Login(props) {
       ) : (
         ""
       )}
-      {props.isSuccess ? (
+      {/* {props.isSuccess ? (
         <SuccessModal
           title={props.successSubject}
           message={props.successMessage}
@@ -146,7 +146,7 @@ function Login(props) {
         />
       ) : (
         ""
-      )}
+      )} */}
       <div className={styles["login-form"]}>
         <div className={styles.logo}>
           <IoRestaurantOutline size={"2.5em"} color="#2175f3" />
