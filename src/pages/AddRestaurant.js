@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "./AddRestaurant.module.css";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { URL_API } from "../helpers";
@@ -14,6 +14,8 @@ import Spinner from "../components/Spinner";
 import { FormCheck } from "react-bootstrap";
 
 function AddRestaurant(props) {
+  const params = useParams();
+  const userId = params.userId;
   const [addFile, setAddFile] = useState(null);
   const [typeIsClicked, setTypeIsClicked] = useState(null);
   const [inputFileIsClicked, setInputFileIsClicked] = useState(null);
@@ -76,21 +78,20 @@ function AddRestaurant(props) {
     isTouched: isDescriptionTouched,
   } = useInput(descriptionValidation);
 
+  let preview = document.getElementById("imgpreview");
   const onBtnAddFile = (e) => {
     console.log(e);
     console.log(e.target.files[0]);
-
+    setAddFile(e.target.files);
     if (e.target.files[0]) {
-      setAddFile(e.target.files[0]);
-      let preview = document.getElementById("imgpreview");
-
       function createImageItem(i) {
         let image = document.createElement("img");
         image.src = URL.createObjectURL(e.target.files[i]);
-        image.classList.add("img-preview");
+        image.classList.add(`${styles["img-preview"]}`);
         return image;
       }
 
+      preview.replaceChildren();
       for (var j = 0; j < e.target.files.length; j++) {
         preview.appendChild(createImageItem(j));
       }
@@ -106,6 +107,9 @@ function AddRestaurant(props) {
   if (typeIsClicked == true && typeIsFocused == false && enteredType == "") {
     enteredTypeIsValid = false;
     typeInputHasError = true;
+  } else {
+    enteredTypeIsValid = true;
+    typeInputHasError = false;
   }
 
   let enteredFileIsValid;
@@ -113,6 +117,9 @@ function AddRestaurant(props) {
   if (inputFileIsClicked == true && !addFile) {
     enteredFileIsValid = false;
     fileInputHasError = true;
+  } else {
+    enteredFileIsValid = true;
+    fileInputHasError = false;
   }
 
   if (
@@ -121,30 +128,62 @@ function AddRestaurant(props) {
     enteredTypeIsValid &&
     enteredPriceIsValid &&
     enteredDescriptionIsValid &&
-    enteredFileIsValid
+    enteredFileIsValid &&
+    addFile &&
+    enteredType
   ) {
     formIsValid = true;
   }
+
+  console.log(addFile);
 
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     console.log(formIsValid);
+    setTypeIsClicked(false);
+    setInputFileIsClicked(false);
+    preview.replaceChildren();
+
     if (!formIsValid) {
       return;
     }
     props.getLoading(true);
 
+    // Buat form data, agar bisa menampung file
+    let formData = new FormData();
+
+    // Buat body nya
+    let obj = {
+      userId: userId,
+      name: enteredName,
+      location: enteredLocation,
+      type: enteredType,
+      price: enteredPrice,
+      description: enteredDescription,
+    };
+
+    console.log(obj);
+    // Masukkan body nya
+    formData.append("data", JSON.stringify(obj));
+    // Masukkan file nya
+    for (let i = 0; i < addFile.length; i++) {
+      let file = addFile.item(i);
+      formData.append("file", file);
+    }
+
+    console.log(addFile);
+
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+
+    //buat requestnya
     axios
-      .post(URL_API + "/restaurants", {
-        name: enteredName,
-        location: enteredLocation,
-        type: enteredType,
-        price: enteredPrice,
-        description: enteredDescription,
-      })
+      .post(URL_API + "/restaurants", formData)
       .then((res) => {
-        console.log(res.data);
+        console.log("Masok");
+        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetNameInput();
@@ -191,6 +230,16 @@ function AddRestaurant(props) {
   } else {
     errorMessage = "";
   }
+
+  console.log(formIsValid);
+  console.log(
+    enteredNameIsValid,
+    enteredLocationIsValid,
+    enteredTypeIsValid,
+    enteredPriceIsValid,
+    enteredDescriptionIsValid,
+    enteredFileIsValid
+  );
 
   return (
     <div className={styles.container}>
@@ -260,14 +309,14 @@ function AddRestaurant(props) {
             <option value="" disabled selected hidden>
               Restaurant type...
             </option>
-            <option value="fine-dining">Fine Dining</option>
-            <option value="family-restaurant">Family Restaurant</option>
-            <option value="traditional-food">Traditional Food</option>
-            <option value="fast-food">Fast Food</option>
-            <option value="cafe">Cafe</option>
-            <option value="buffet">Buffet</option>
-            <option value="food-trucks-stands">Food Trucks/Stands</option>
-            <option value="online-only">Online only</option>
+            <option value="Fine Dining">Fine Dining</option>
+            <option value="Family Restaurant">Family Restaurant</option>
+            <option value="Traditional Food">Traditional Food</option>
+            <option value="Fast Food">Fast Food</option>
+            <option value="Cafe">Cafe</option>
+            <option value="Buffet">Buffet</option>
+            <option value="Food Trucks/Stands">Food Trucks/Stands</option>
+            <option value="Online Only">Online Only</option>
           </select>
 
           <label for="price">Price</label>
@@ -294,14 +343,25 @@ function AddRestaurant(props) {
             value={enteredDescription}
           />
           <div>
-            <label htmlFor="img">Image(s)</label>
+            <label htmlFor="img" onClick={() => setInputFileIsClicked(true)}>
+              Image(s)
+            </label>
+            <label
+              htmlFor="img"
+              className={styles.change}
+              onClick={() => setInputFileIsClicked(true)}
+            >
+              Browse...
+            </label>
             <input
               className={styles.change}
               type="file"
               id="img"
               onChange={onBtnAddFile}
               multiple="multiple"
-              onClick={() => setInputFileIsClicked(true)}
+              style={{
+                display: "none",
+              }}
             />
           </div>
 
@@ -311,6 +371,7 @@ function AddRestaurant(props) {
             className={
               formIsValid ? styles.register : styles["register-disabled"]
             }
+            disabled={!formIsValid}
           >
             Add Restaurant{" "}
           </button>

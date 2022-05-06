@@ -50,6 +50,7 @@ function ProfileEdit(props) {
       formData.append('key1', 'value1');
       formData.append('key2', 'value2');
 
+      Untuk looping formData
       // Display the key/value pairs
       for (var pair of formData.entries()) {
           console.log(pair[0]+ ', ' + pair[1]);

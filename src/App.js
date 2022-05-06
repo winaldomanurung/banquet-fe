@@ -36,7 +36,7 @@ function App() {
           element={<RestaurantDetail />}
         />
         <Route path="/about" element={<About />} />
-        <Route path="/add-restaurant" element={<AddRestaurant />} />
+        <Route path="/:userId/add-restaurant" element={<AddRestaurant />} />
 
         {!authCtx.isLoggedIn && <Route path="/login" element={<Login />} />}
         {!authCtx.isLoggedIn && (

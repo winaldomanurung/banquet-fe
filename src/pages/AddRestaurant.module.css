@@ -121,7 +121,7 @@ input:focus::placeholder {
   border-radius: 10px;
 }
 
-img-preview {
+.img-preview {
   display: inline;
   margin: 0 auto;
   height: 100px;
@@ -130,6 +130,19 @@ img-preview {
   border-radius: 10px;
   margin: 10px 16px 0 0;
   /* margin-left: 0; */
+}
+
+.change {
+  background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 7px 12px;
+  text-decoration: none;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.8em;
+  width: 100px;
 }
 
 @media only screen and (max-width: 768px) {
