@@ -13,6 +13,7 @@ const useInput = (validateValue, initialValue = "") => {
   };
 
   const inputBlurHandler = (event) => {
+    console.log(isTouched);
     setIsTouched(true);
   };
 

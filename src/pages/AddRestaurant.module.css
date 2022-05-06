@@ -11,14 +11,15 @@
   justify-content: center;
 }
 
-.login-form {
+.add-form {
   margin: auto;
-  width: 600px;
+  width: 800px;
   border: 1px solid black;
   border-radius: 20px;
   padding: 50px 5% 80px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border: none;
+  max-width: 600px;
 }
 
 .title {
@@ -75,7 +76,7 @@ input:focus::placeholder {
   cursor: not-allowed;
 }
 
-.login {
+.add {
   text-decoration: none;
   color: #2175f3;
 }
@@ -102,8 +103,37 @@ input:focus::placeholder {
   transition: all 0.3s ease-in-out;
 }
 
+.change {
+  /* background-color: #2175f3; */
+  border: none;
+  /* color: white; */
+  padding: 7px 0;
+  /* text-decoration: none; */
+  /* margin: 15px 2px; */
+  cursor: pointer;
+  /* border-radius: 5px; */
+  font-size: 0.8em;
+  display: block;
+}
+
+.img-container {
+  position: relative;
+  border-radius: 10px;
+}
+
+img-preview {
+  display: inline;
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px 16px 0 0;
+  /* margin-left: 0; */
+}
+
 @media only screen and (max-width: 768px) {
-  .login-form {
+  .add-form {
     width: 90vw;
     min-width: 400px;
   }
