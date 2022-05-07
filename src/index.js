@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { Reducers } from "./reducers";
 import { AuthContextProvider } from "./store/auth-context";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "mapbox-gl/dist/mapbox-gl";
 
 const storeReducer = createStore(Reducers);
 

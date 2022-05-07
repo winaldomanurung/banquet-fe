@@ -12,14 +12,7 @@ function MyRestaurants() {
 
   useEffect(() => {
     axios
-      .get(
-        URL_API + "/restaurants/get-my-restaurants"
-        // , {
-        //   headers: {
-        //     "Auth-Token": authCtx.token,
-        //   },
-        // }
-      )
+      .get(URL_API + "/restaurants/get-my-restaurants")
       .then((res) => {
         console.log(res.data);
         setRestaurants(res.data.dataUser);

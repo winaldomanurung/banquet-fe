@@ -324,6 +324,9 @@ function AddRestaurant(props) {
             type="number"
             name="price"
             id="price"
+            min="0"
+            step="1000"
+            // max="1000"
             placeholder="Price range for one person..."
             className={`${styles.input} ${priceInputClasses}`}
             onChange={priceChangeHandler}

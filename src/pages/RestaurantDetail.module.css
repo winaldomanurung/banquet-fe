@@ -4,6 +4,7 @@
   width: 80vw;
   height: 100%;
   max-width: 1200px;
+  margin-bottom: 50px;
 }
 
 .data-render {
@@ -44,12 +45,32 @@
 .creator {
   display: flex;
   flex-direction: row;
-  padding: 20px 15px;
+  padding: 20px 15px 10px 15px;
+  align-items: center;
+  justify-content: center;
 }
-/* .creator-title {
+.creator-image {
+  /* display: inline-block; */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  margin-left: 0;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
-.creator-content {
-} */
+.creator-text {
+  display: flex;
+  flex-direction: column;
+}
+.creator-name {
+  font-size: 1em;
+}
+.creator-date {
+  font-size: 0.8em;
+}
 .restaurant-text {
   display: flex;
   flex-direction: column;
@@ -58,6 +79,33 @@
   /* padding: 0 30px;
   margin-left: 40px; */
   border: none;
+}
+.reaction {
+  display: flex;
+  flex-direction: row;
+  padding: 0 20px 15px 15px;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.like,
+.dislike,
+.comment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+}
+
+.counter {
+  padding-left: 15px;
+}
+
+.button-like,
+.button-dislike,
+.button-comment {
+  cursor: pointer;
 }
 
 .description {
@@ -108,7 +156,9 @@
 
 .location-map {
   width: 100%;
-  height: 300px;
+  height: 250px;
+  border: none;
+  border-radius: 20px;
 }
 
 .edit,
@@ -142,134 +192,197 @@
   background-color: #c55354;
 }
 
-/* 
-.container {
-  padding-top: 90px;
-  margin: auto;
-  width: 80vw;
-  height: 100%;
-  max-width: 1200px;
-}
+/* FORM SECTION */
 
-.data-render {
-  padding: 50px 70px;
-  border: none;
-  border-radius: 50px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-}
-
-.title {
+.title2 {
   text-align: center;
   font-size: 2em;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   font-weight: 500;
 }
-
-.restaurant-container {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 50px;
-}
-.restaurant-media {
-  display: flex;
-  flex-direction: column;
-  border: none;
-  border-radius: 30px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  width: 45%;
-}
-
-.restaurant-image {
-  width: 100%;
-  height: 500px;
-  min-height: 300px;
-  border-radius: 30px 30px 0 0;
-}
-
-.creator {
-  display: flex;
-  flex-direction: row;
-  padding: 20px 15px;
-}
-
-.restaurant-text {
-  display: flex;
-  flex-direction: column;
-  border: none;
-  width: 55%;
-  padding: 0 30px;
-  margin-left: 40px;
-  border: none;
-  border-radius: 30px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-}
-
-.description {
-  display: flex;
-  flex-direction: column;
-  padding-top: 30px;
-  
-}
-
-.description-title,
-.price-title,
-.location-title {
-  font-size: 1.2em;
-  font-weight: 400;
-}
-.description-content {
-  text-align: justify;
-  text-justify: inter-word;
-}
-.price {
-  display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-}
-
-
-.location {
-  display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-}
-.location-address {
-  text-align: justify;
-  text-justify: inter-word;
-}
-
-.location-map {
-  width: 100%;
-  height: 300px;
-}
-
-.edit,
-.delete {
-  padding: 8px 15px;
+.form {
   margin: auto;
-  color: white;
-  border-radius: 5px;
-  transition: background-color 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  max-width: 640px;
+}
+
+.input {
+  padding: 12px 12px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  border: 1px solid;
+  margin: 10px 0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   border: none;
 }
 
-.operation {
-  padding-top: 20px;
-  text-align: right;
+input:focus::placeholder {
+  color: transparent;
 }
 
-.edit {
+.submit {
   background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.submit-disabled {
+  background-color: #d5dbe6;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: not-allowed;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.submit-disabled:hover {
+  cursor: not-allowed;
+}
+
+.invalid {
+  border: 1px solid #b40e0e;
+  background-color: #fddddd;
+}
+
+.error {
+  font-size: 0.9em;
+  text-align: center;
+  background-color: #fddddd;
+  padding: 10px 10px;
+  color: #b40e0e;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  visibility: visible;
+}
+
+.errorHide {
+  font-size: 0.9em;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+/* REVIEW SECTION */
+.review-container {
+  min-width: 440px;
+  width: 800px;
+  margin: auto;
+}
+
+.review {
+  display: flex;
+  flex-direction: row;
+  /* width: 100%; */
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-user {
+}
+
+.user-name {
+  font-weight: 500;
+}
+.user-image {
+  /* display: inline-block; */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
   margin-right: 10px;
+  margin-left: 0;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+.review-content {
+  display: flex;
+  flex-direction: column;
+}
+.content-header {
+  /* display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 0 0 100%; */
+}
+.content-title {
+  font-weight: 500;
+}
+.content-reaction {
+}
+.content-text {
+  font-size: 0.9em;
 }
 
-.edit:hover {
-  background-color: #104fad;
-}
-.delete {
-  background-color: #f47174;
-}
+@media only screen and (max-width: 1054px) {
+  .data-render {
+    min-width: 580px;
+  }
+  .restaurant-container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
-.delete:hover {
-  background-color: #c55354;
-} */
+  .restaurant-media {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .restaurant-text {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 0 0 0;
+  }
+
+  .description-title,
+  .price-title,
+  .location-title {
+    margin-left: 0;
+  }
+  .description-content,
+  .price-content,
+  .location-address {
+    margin-left: 0;
+  }
+
+  .location-map {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    /* width: 100%; */
+    height: 250px;
+    /* max-width: 500px; */
+    align-items: center;
+  }
+
+  .add-form {
+    width: 90vw;
+    min-width: 400px;
+  }
+
+  .review-container {
+    width: 600px;
+    /* width: 600px; */
+    min-width: 400px;
+    margin: auto;
+  }
+
+  .review {
+    display: flex;
+    flex-direction: row;
+    /* width: 100%; */
+    align-items: center;
+    justify-content: space-between;
+  }
+}
