@@ -5,9 +5,19 @@ import { URL_API } from "../helpers";
 import styles from "./RestaurantDetail.module.css";
 import { Link } from "react-router-dom";
 import { MdOutlineDescription } from "react-icons/md";
-import { FaRegMoneyBillAlt, FaMapMarkerAlt, FaComments } from "react-icons/fa";
+import {
+  FaRegMoneyBillAlt,
+  FaMapMarkerAlt,
+  FaComments,
+  FaRegComments,
+} from "react-icons/fa";
 import { GoLocation } from "react-icons/go";
-import { AiFillLike, AiFillDislike } from "react-icons/ai";
+import {
+  AiFillLike,
+  AiFillDislike,
+  AiOutlineLike,
+  AiOutlineDislike,
+} from "react-icons/ai";
 import { GoDash } from "react-icons/go";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { Carousel } from "react-bootstrap";
@@ -30,7 +40,7 @@ function RestaurantDetail(props) {
   const [user, setUser] = useState("");
   const [lat, setLat] = useState(3);
   const [long, setLong] = useState(120);
-  const [comments, setComments] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   // Ambil data restaurant
   useEffect(() => {
@@ -77,7 +87,7 @@ function RestaurantDetail(props) {
       .get(URL_API + `/reactions/${restaurantId}/get-reviews`)
       .then((res) => {
         console.log(res.data);
-        setComments(res.data.dataUser);
+        setReviews(res.data.dataUser);
       })
       .catch((err) => {
         console.log(err);
@@ -86,7 +96,7 @@ function RestaurantDetail(props) {
 
   console.log(restaurant);
   console.log(images);
-  console.log(comments);
+  console.log(reviews);
 
   const mapImages = () => {
     return images.map((image, index) => {
@@ -105,35 +115,35 @@ function RestaurantDetail(props) {
   };
 
   const mapComments = () => {
-    return comments.map((comment, index) => {
+    return reviews.map((review, index) => {
       return (
         <div className={styles.review}>
           <div className={styles["review-user"]}>
             <img
               className={styles["user-image"]}
-              src={URL_API + comment.imageUrl}
+              src={URL_API + review.imageUrl}
             />
-            <div className={styles["user-name"]}>{comment.username}</div>
+            <div className={styles["user-name"]}>{review.username}</div>
           </div>
           <div className={styles["review-content"]}>
-            <div className={styles["content-title"]}>{comment.reviewTitle}</div>
+            <div className={styles["content-title"]}>{review.reviewTitle}</div>
 
             <div className={styles["content-text"]}>
-              {comment.reviewDescription}
+              {review.reviewDescription}
             </div>
           </div>
           <div className={styles["content-reaction"]}>
             {
-              // if(comment.likes == 1){
+              // if(review.likes == 1){
               //   return <AiFillLike size={"2em"} color="#069A8E" />
               // } else {
 
               // }
-              (comment.likes && <AiFillLike size={"2em"} color="#069A8E" />) ||
-                (comment.dislikes && (
+              (review.likes && <AiFillLike size={"2em"} color="#069A8E" />) ||
+                (review.dislikes && (
                   <AiFillDislike size={"2em"} color="#f47174" />
                 )) ||
-                (!comment.dislikes && !comment.likes && (
+                (!review.dislikes && !review.likes && (
                   <GoDash size={"2em"} color="#808080" />
                 ))
             }
@@ -278,22 +288,20 @@ function RestaurantDetail(props) {
               <hr />
               <div className={styles.reaction}>
                 <div className={styles.like}>
-                  <AiFillLike
-                    className={styles["button-like"]}
-                    size={"2em"}
-                    color="#069A8E"
-                    onMouseOver={({ target }) => {
-                      target.style.color = "#005555";
-                    }}
-                    onMouseOut={({ target }) => {
-                      target.style.color = "#069A8E";
-                    }}
-                    // style={{ transition: "color 5s ease-in" }}
-                  />
+                  {true ? (
+                    <AiFillLike size={"2em"} color="#069A8E" />
+                  ) : (
+                    <AiOutlineLike
+                      className={styles["button-like"]}
+                      size={"2em"}
+                      color="#069A8E"
+                    />
+                  )}
+
                   <div className={styles.counter}>23</div>
                 </div>
                 <div className={styles.dislike}>
-                  <AiFillDislike
+                  <AiOutlineDislike
                     className={styles["button-dislike"]}
                     size={"2em"}
                     color="#f47174"
@@ -307,7 +315,7 @@ function RestaurantDetail(props) {
                   <div className={styles.counter}>56</div>
                 </div>
                 <div className={styles.comment}>
-                  <FaComments
+                  <FaRegComments
                     size={"2em"}
                     className={styles["button-dislike"]}
                     color="#2175f3"

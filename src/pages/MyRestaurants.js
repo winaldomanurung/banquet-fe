@@ -35,7 +35,7 @@ function MyRestaurants() {
       return (
         <RestaurantCard
           name={restaurant.name}
-          image={restaurant.image}
+          image={URL_API + restaurant.imageUrl}
           description={restaurant.description}
           key={restaurant.restaurantId}
           id={restaurant.restaurantId}
@@ -46,9 +46,11 @@ function MyRestaurants() {
 
   return (
     <div className={styles.container}>
-      MyRestaurants
-      <div className={styles["cards-container"]}>
-        {generateRestaurantsCard()}
+      <div className={styles["data-render"]}>
+        <div className={styles.title}>My Restaurants</div>
+        <div className={styles["cards-container"]}>
+          {generateRestaurantsCard()}
+        </div>
       </div>
     </div>
   );
