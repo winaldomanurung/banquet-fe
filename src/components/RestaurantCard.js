@@ -4,7 +4,7 @@ import styles from "./RestaurantCard.module.css";
 import { Link } from "react-router-dom";
 
 const RestaurantCard = ({ ...props }) => {
-  console.log(props);
+  // console.log(props);
   return (
     <div className={styles.card}>
       <Link to={`/my-restaurants/${props.id}`} className={styles.link}>
