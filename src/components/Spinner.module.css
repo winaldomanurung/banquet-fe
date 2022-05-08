@@ -10,7 +10,7 @@
 
 .spinner {
   z-index: 10000;
-  position: absolute;
+  position: fixed;
   left: 50vw;
   top: 50vh;
   transform: translate(-50%, -50%);
