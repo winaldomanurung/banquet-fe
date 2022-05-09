@@ -13,6 +13,7 @@ function NavigationBar(props) {
   // Check user login dengan menggunakan context
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
+  console.log(isLoggedIn);
 
   // console.log("PROPS", props.userId);
   const logoutHandler = () => {
@@ -53,22 +54,22 @@ function NavigationBar(props) {
                 Restaurants
               </Link>
             </Nav.Link>
-            <Nav.Link eventKey="3">
-              <Link
-                to="/my-restaurants"
-                style={{ textDecoration: "none", color: "#0b0b0b" }}
-              >
-                My Restaurants
-              </Link>
-            </Nav.Link>
-          </Nav>
-          {!isLoggedIn ? (
-            <Nav>
-              <Nav.Link eventKey="7" className={styles.add}>
-                <Link className={styles["add-link"]} to="/add-restaurant">
-                  <MdAdd size={"1.5em"} color="white" /> Add Place
+            {isLoggedIn ? (
+              <Nav.Link eventKey="3">
+                <Link
+                  to={`/${props.userId}/my-restaurants`}
+                  style={{ textDecoration: "none", color: "#0b0b0b" }}
+                >
+                  My Restaurants
                 </Link>
               </Nav.Link>
+            ) : (
+              ""
+            )}
+          </Nav>
+
+          {!isLoggedIn ? (
+            <Nav>
               <Nav.Link eventKey="4" className={styles.login}>
                 <Link className={styles["login-link"]} to="/login">
                   Login
@@ -82,6 +83,14 @@ function NavigationBar(props) {
             </Nav>
           ) : (
             <Nav>
+              <Nav.Link eventKey="7" className={styles.add}>
+                <Link
+                  className={styles["add-link"]}
+                  to={`/${props.userId}/add-restaurant`}
+                >
+                  <MdAdd size={"1.5em"} color="white" /> Add Place
+                </Link>
+              </Nav.Link>
               <Nav.Link eventKey="6" className={styles.logout}>
                 <Link
                   to="/"

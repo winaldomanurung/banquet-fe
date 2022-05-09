@@ -58,6 +58,12 @@ function Restaurants() {
                     description={restaurant.description}
                     key={restaurant.restaurantId}
                     id={restaurant.restaurantId}
+                    createdDate={restaurant.createdDate}
+                    username={restaurant.username}
+                    userImage={URL_API + restaurant.userImageUrl}
+                    likes={restaurant.totalLikes}
+                    dislikes={restaurant.totalDislikes}
+                    reviews={restaurant.totalReviews}
                   />
                 </div>
               );
@@ -70,6 +76,12 @@ function Restaurants() {
                     description={restaurant.description}
                     key={restaurant.restaurantId}
                     id={restaurant.restaurantId}
+                    createdDate={restaurant.createdDate}
+                    username={restaurant.username}
+                    userImage={URL_API + restaurant.userImageUrl}
+                    likes={restaurant.totalLikes}
+                    dislikes={restaurant.totalDislikes}
+                    reviews={restaurant.totalReviews}
                   />
                 </div>
               );

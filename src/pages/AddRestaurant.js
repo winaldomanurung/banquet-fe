@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import styles from "./AddRestaurant.module.css";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import { RiErrorWarningFill } from "react-icons/ri";
 import { URL_API } from "../helpers";
@@ -12,10 +12,27 @@ import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
 import { FormCheck } from "react-bootstrap";
+import AuthContext from "../store/auth-context";
 
 function AddRestaurant(props) {
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+
   const params = useParams();
   const userId = params.userId;
+
+  const [redirect, setRedirect] = useState(false);
+  let navigate = useNavigate();
+  const goToLogin = () => {
+    if (redirect) {
+      console.log("Redirect");
+      return navigate("/login", { replace: true });
+    }
+  };
+
+  goToLogin();
+
+  console.log(userId);
   const [addFile, setAddFile] = useState(null);
   const [typeIsClicked, setTypeIsClicked] = useState(null);
   const [inputFileIsClicked, setInputFileIsClicked] = useState(null);
@@ -244,6 +261,15 @@ function AddRestaurant(props) {
   return (
     <div className={styles.container}>
       {props.isLoading ? <Spinner /> : ""}
+      {!isLoggedIn ? (
+        <ErrorModal
+          title="Please login!"
+          message="You have to login to add restaurant."
+          onConfirm={() => setRedirect(true)}
+        />
+      ) : (
+        ""
+      )}
       {props.isError ? (
         <ErrorModal
           title={props.errorSubject}

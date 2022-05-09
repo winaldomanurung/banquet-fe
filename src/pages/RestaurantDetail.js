@@ -440,11 +440,15 @@ function RestaurantDetail(props) {
             Submit Review{" "}
           </button>
         </form>
-        <hr />
-        <div className={styles["review-container"]}>
-          <div className={styles.title}>Reviews</div>
-          {mapComments()}
-        </div>
+        {reviews.length ? <hr /> : ""}
+        {reviews.length ? (
+          <div className={styles["review-container"]}>
+            <div className={styles.title}>Reviews</div>
+            {mapComments()}
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

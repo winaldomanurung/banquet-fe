@@ -30,9 +30,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HeroSection />} />
         <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/my-restaurants" element={<MyRestaurants />} />
+        <Route path="/:userId/my-restaurants" element={<MyRestaurants />} />
         <Route
-          path="/:userId/my-restaurants/:restaurantId"
+          path="/:userId/restaurants/:restaurantId"
           element={<RestaurantDetail />}
         />
         <Route path="/about" element={<About />} />

@@ -28,6 +28,7 @@ function usePagination(pageNumber, endpoint) {
         });
         // Ini di cek apa masih ada data yang belum di load
         console.log(res.data.token[0].totalRestaurants);
+        console.log(res.data.dataUser.length);
         setHasMore(
           // dataRestaurants.length < res.data.token[0].totalRestaurants - 1
           res.data.dataUser.length > 0

@@ -25,6 +25,36 @@
   font-size: 1.1em;
 }
 
+.card-creator {
+  display: flex;
+  flex-direction: row;
+  /* padding: 0 15px 5px 15px; */
+  align-items: center;
+  justify-content: left;
+}
+.creator-image {
+  /* display: inline-block; */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+  margin-left: 0;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+.creator-text {
+  display: flex;
+  flex-direction: column;
+}
+.creator-name {
+  font-size: 1em;
+}
+.creator-date {
+  font-size: 0.8em;
+}
+
 .card-text {
   -webkit-box-orient: vertical;
   display: -webkit-box;
@@ -38,6 +68,28 @@
 .card-image {
   border-radius: 10px 10px 0 0;
   max-height: 200px;
+}
+
+.reaction {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.like,
+.dislike,
+.comment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+}
+
+.counter {
+  padding-left: 3px;
+  font-size: 0.8em;
 }
 
 .card-button {
