@@ -58,6 +58,9 @@ function RestaurantDetail(props) {
   const [lat, setLat] = useState(3);
   const [long, setLong] = useState(120);
   const [reviews, setReviews] = useState([]);
+  const [counter, setCounter] = useState({});
+  const [userLoginReaction, setUserLoginReaction] = useState({});
+  const [reactionChange, setReactionChange] = useState(false);
 
   // Ambil data restaurant
   useEffect(() => {
@@ -80,6 +83,7 @@ function RestaurantDetail(props) {
       });
   }, []);
 
+  // Ambil data user yang buat restaurant
   useEffect(() => {
     axios
       .get(URL_API + `/users/${userId}`)
@@ -101,26 +105,54 @@ function RestaurantDetail(props) {
   console.log(props.userId);
 
   // Ambil data user yang login
-  axios
-    .get(URL_API + "/users/retrieve-data", {
-      headers: {
-        "Auth-Token": authCtx.token,
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-      props.authLogin(res.data.dataUser);
-    })
-    .catch((err) => {
-      console.log(err);
-      props.getLoading(false);
-      props.getError(
-        true,
-        err.response.data.subject,
-        err.response.data.message
-      );
-    });
+  useEffect(() => {
+    axios
+      .get(URL_API + "/users/retrieve-data", {
+        headers: {
+          "Auth-Token": authCtx.token,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        props.authLogin(res.data.dataUser);
 
+        return res.data.dataUser.userId;
+      })
+      .then((userIdLogin) => {
+        console.log("masuk kedua");
+        console.log(userIdLogin);
+        axios
+          .get(
+            URL_API + `/reactions/${restaurantId}/get-reactions/${userIdLogin}`
+          )
+          .then((res2) => {
+            setReactionChange(false);
+
+            console.log(res2.data.dataUser);
+            setUserLoginReaction(res2.data.dataUser);
+          })
+          .catch((err) => {
+            console.log(err);
+            props.getLoading(false);
+            props.getError(
+              true,
+              err.response.data.subject,
+              err.response.data.message
+            );
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
+  }, [reactionChange]);
+
+  // Ambil image untuk restaurant
   useEffect(() => {
     axios
       .get(URL_API + `/restaurants/${restaurantId}/images`)
@@ -157,6 +189,50 @@ function RestaurantDetail(props) {
         );
       });
   }, [props.isLoading]);
+
+  // Menghitung like
+  useEffect(() => {
+    axios
+      .get(URL_API + `/reactions/counter/${restaurantId}`)
+      .then((res) => {
+        console.log(res.data);
+        setCounter(res.data.dataUser);
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
+  }, [reactionChange]);
+  console.log(props.userId);
+
+  // // Reaction by user yang sedang login
+  // useEffect(() => {
+  //   console.log(props.userId);
+
+  //   axios
+  //     .get(URL_API + `/reactions/${restaurantId}/get-reactions/${props.userId}`)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setUserLoginReaction(res.data.dataUser);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       props.getLoading(false);
+  //       props.getError(
+  //         true,
+  //         err.response.data.subject,
+  //         err.response.data.message
+  //       );
+  //     });
+  // }, []);
+
+  console.log(counter);
+  console.log(userLoginReaction);
 
   console.log(restaurant);
   console.log(images);
@@ -334,6 +410,62 @@ function RestaurantDetail(props) {
     enteredDescriptionIsValid
   );
 
+  const likeHandler = () => {
+    props.getLoading(true);
+
+    axios
+      .post(URL_API + `/reactions/like`, {
+        restaurantId: restaurantId,
+        userId: props.userId,
+        like: 1,
+      })
+      .then((res) => {
+        console.log("Masok");
+        setReactionChange(true);
+        // console.log(res.data);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
+  };
+
+  const dislikeHandler = () => {
+    props.getLoading(true);
+
+    axios
+      .post(URL_API + `/reactions/dislike`, {
+        restaurantId: restaurantId,
+        userId: props.userId,
+        dislike: 1,
+      })
+      .then((res) => {
+        console.log("Masok");
+        setReactionChange(true);
+        // console.log(res.data);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
+  };
+
+  console.log(userLoginReaction);
+
   return (
     <div className={styles.container}>
       {props.isLoading ? <Spinner /> : ""}
@@ -362,7 +494,7 @@ function RestaurantDetail(props) {
           message={props.successMessage}
           onConfirm={() => {
             props.getSuccess(false);
-            setRedirect(true);
+            // setRedirect(true);
           }}
         />
       ) : (
@@ -395,31 +527,45 @@ function RestaurantDetail(props) {
               <hr />
               <div className={styles.reaction}>
                 <div className={styles.like}>
-                  {true ? (
-                    <AiFillLike size={"2em"} color="#069A8E" />
+                  {userLoginReaction.likes == 1 ? (
+                    <AiFillLike
+                      size={"2em"}
+                      color="#069A8E"
+                      className={styles["button-like"]}
+                      onClick={likeHandler}
+                    />
                   ) : (
                     <AiOutlineLike
                       className={styles["button-like"]}
                       size={"2em"}
                       color="#069A8E"
+                      onClick={likeHandler}
                     />
                   )}
 
-                  <div className={styles.counter}>23</div>
+                  <div className={styles.counter}>
+                    {counter == {} ? 0 : counter.total_likes}
+                  </div>
                 </div>
                 <div className={styles.dislike}>
-                  <AiOutlineDislike
-                    className={styles["button-dislike"]}
-                    size={"2em"}
-                    color="#f47174"
-                    onMouseOver={({ target }) => {
-                      target.style.color = "#c55354";
-                    }}
-                    onMouseOut={({ target }) => {
-                      target.style.color = "#f47174";
-                    }}
-                  />
-                  <div className={styles.counter}>56</div>
+                  {userLoginReaction.dislikes == 1 ? (
+                    <AiFillDislike
+                      className={styles["button-dislike"]}
+                      size={"2em"}
+                      color="#c55354"
+                      onClick={dislikeHandler}
+                    />
+                  ) : (
+                    <AiOutlineDislike
+                      className={styles["button-dislike"]}
+                      size={"2em"}
+                      color="#f47174"
+                      onClick={dislikeHandler}
+                    />
+                  )}
+                  <div className={styles.counter}>
+                    {counter == {} ? 0 : counter.total_dislikes}
+                  </div>
                 </div>
                 <div className={styles.comment}>
                   <FaRegComments
@@ -433,7 +579,9 @@ function RestaurantDetail(props) {
                       target.style.color = "#2175f3";
                     }}
                   />
-                  <div className={styles.counter}>12</div>
+                  <div className={styles.counter}>
+                    {counter == {} ? 0 : counter.total_reviews}
+                  </div>
                 </div>
               </div>
             </div>

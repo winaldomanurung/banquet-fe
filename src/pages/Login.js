@@ -103,7 +103,8 @@ function Login(props) {
         return res.data;
       })
       .then((res2) => {
-        const expirationTime = new Date(new Date().getTime() + 600 * 1000);
+        // Untuk auto logout
+        const expirationTime = new Date(new Date().getTime() + 60000 * 1000);
         authCtx.login(res2.token, expirationTime.toISOString());
       })
       .catch((err) => {
