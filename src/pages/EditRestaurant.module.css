@@ -1,0 +1,153 @@
+.container {
+  padding-top: 150px;
+  margin: auto;
+  width: 90vw;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-form {
+  margin: auto;
+  width: 800px;
+  border: 1px solid black;
+  border-radius: 20px;
+  padding: 50px 5% 80px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 1.5em;
+  margin: 20px auto;
+  text-align: center;
+}
+.form {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  /* width: 30%; */
+}
+
+.input {
+  padding: 12px 12px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  border: 1px solid;
+  margin: 10px 0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border: none;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+.register {
+  background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.register-disabled {
+  background-color: #d5dbe6;
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin: 15px 2px;
+  cursor: not-allowed;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.register-disabled:hover {
+  cursor: not-allowed;
+}
+
+.add {
+  text-decoration: none;
+  color: #2175f3;
+}
+
+.invalid {
+  border: 1px solid #b40e0e;
+  background-color: #fddddd;
+}
+
+.error {
+  font-size: 0.9em;
+  text-align: center;
+  background-color: #fddddd;
+  padding: 10px 10px;
+  color: #b40e0e;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+  visibility: visible;
+}
+
+.errorHide {
+  font-size: 0.9em;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.change {
+  /* background-color: #2175f3; */
+  border: none;
+  /* color: white; */
+  padding: 7px 0;
+  /* text-decoration: none; */
+  /* margin: 15px 2px; */
+  cursor: pointer;
+  /* border-radius: 5px; */
+  font-size: 0.8em;
+  display: block;
+}
+
+.img-container {
+  position: relative;
+  border-radius: 10px;
+}
+
+.img-preview {
+  display: inline;
+  margin: 0 auto;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 10px 16px 0 0;
+  /* margin-left: 0; */
+}
+
+.change {
+  background-color: #2175f3;
+  border: none;
+  color: white;
+  padding: 7px 12px;
+  text-decoration: none;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 0.8em;
+  width: 100px;
+}
+
+@media only screen and (max-width: 768px) {
+  .add-form {
+    width: 90vw;
+    min-width: 400px;
+  }
+}

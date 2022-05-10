@@ -16,6 +16,7 @@ import { useContext } from "react";
 import AuthContext from "./store/auth-context";
 import AddRestaurant from "./pages/AddRestaurant";
 import RestaurantDetail from "./pages/RestaurantDetail";
+import EditRestaurant from "./pages/EditRestaurant";
 import axios from "axios";
 import { URL_API } from "./helpers";
 
@@ -31,6 +32,10 @@ function App() {
         <Route path="/" element={<HeroSection />} />
         <Route path="/restaurants" element={<Restaurants />} />
         <Route path="/:userId/my-restaurants" element={<MyRestaurants />} />
+        <Route
+          path="/:userId/restaurants/:restaurantId/edit"
+          element={<EditRestaurant />}
+        />
         <Route
           path="/:userId/restaurants/:restaurantId"
           element={<RestaurantDetail />}

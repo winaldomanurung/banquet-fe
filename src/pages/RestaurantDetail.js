@@ -1,9 +1,9 @@
 import axios from "axios";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { URL_API } from "../helpers";
 import styles from "./RestaurantDetail.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MdOutlineDescription } from "react-icons/md";
 import {
   FaRegMoneyBillAlt,
@@ -28,12 +28,29 @@ import { getSuccess, getError, getLoading } from "../actions";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
+import AuthContext from "../store/auth-context";
+import { authLogin } from "../actions";
 
 function RestaurantDetail(props) {
   const params = useParams();
   console.log(params);
   const restaurantId = params.restaurantId;
   const userId = params.userId;
+  const [onDelete, setOnDelete] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const isLoggedIn = authCtx.isLoggedIn;
+
+  const [redirect, setRedirect] = useState(false);
+  let navigate = useNavigate();
+  const goToRestaurants = () => {
+    if (redirect) {
+      console.log("Redirect");
+      return navigate("/restaurants", { replace: true });
+    }
+  };
+
+  goToRestaurants();
 
   const [restaurant, setRestaurant] = useState("");
   const [images, setImages] = useState([]);
@@ -54,6 +71,12 @@ function RestaurantDetail(props) {
       })
       .catch((err) => {
         console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
       });
   }, []);
 
@@ -66,8 +89,37 @@ function RestaurantDetail(props) {
       })
       .catch((err) => {
         console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
       });
   }, []);
+
+  console.log(props.userId);
+
+  // Ambil data user yang login
+  axios
+    .get(URL_API + "/users/retrieve-data", {
+      headers: {
+        "Auth-Token": authCtx.token,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      props.authLogin(res.data.dataUser);
+    })
+    .catch((err) => {
+      console.log(err);
+      props.getLoading(false);
+      props.getError(
+        true,
+        err.response.data.subject,
+        err.response.data.message
+      );
+    });
 
   useEffect(() => {
     axios
@@ -78,6 +130,12 @@ function RestaurantDetail(props) {
       })
       .catch((err) => {
         console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
       });
   }, []);
 
@@ -91,6 +149,12 @@ function RestaurantDetail(props) {
       })
       .catch((err) => {
         console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
       });
   }, [props.isLoading]);
 
@@ -219,6 +283,33 @@ function RestaurantDetail(props) {
       });
   };
 
+  const deleteHandler = (event) => {
+    event.preventDefault();
+
+    setOnDelete(false);
+    props.getLoading(true);
+
+    axios
+      .delete(URL_API + `/restaurants/${restaurantId}`)
+      .then((res) => {
+        console.log("Masok");
+        // console.log(res.data);
+        props.getLoading(false);
+        props.getSuccess(true, res.data.subject, res.data.message);
+        resetTitleInput();
+        resetDescriptionInput();
+      })
+      .catch((err) => {
+        console.log(err);
+        props.getLoading(false);
+        props.getError(
+          true,
+          err.response.data.subject,
+          err.response.data.message
+        );
+      });
+  };
+
   const titleInputClasses = titleInputHasError ? styles.invalid : "";
   const descriptionInputClasses = descriptionInputHasError
     ? styles.invalid
@@ -246,6 +337,15 @@ function RestaurantDetail(props) {
   return (
     <div className={styles.container}>
       {props.isLoading ? <Spinner /> : ""}
+      {onDelete ? (
+        <ErrorModal
+          title="Confirmation"
+          message="Are you sure to delete this restaurant?"
+          onConfirm={deleteHandler}
+        />
+      ) : (
+        ""
+      )}
       {props.isError ? (
         <ErrorModal
           title={props.errorSubject}
@@ -255,12 +355,14 @@ function RestaurantDetail(props) {
       ) : (
         ""
       )}
+
       {props.isSuccess ? (
         <SuccessModal
           title={props.successSubject}
           message={props.successMessage}
           onConfirm={() => {
             props.getSuccess(false);
+            setRedirect(true);
           }}
         />
       ) : (
@@ -271,7 +373,12 @@ function RestaurantDetail(props) {
         <div className="content-container">
           <div className={styles["restaurant-container"]}>
             <div className={styles["restaurant-media"]}>
-              <Carousel>{mapImages()}</Carousel>
+              <Carousel
+                controls={images > 1 ? true : false}
+                indicators={images > 1 ? true : false}
+              >
+                {mapImages()}
+              </Carousel>
               <div className={styles.creator}>
                 <img
                   className={styles["creator-image"]}
@@ -339,12 +446,7 @@ function RestaurantDetail(props) {
                   Description
                 </div>
                 <div className={styles["description-content"]}>
-                  {restaurant.description} Suasananya enak, kecil tapi adem
-                  banget. Nyobain bingsoo disini juga enak dan worth it sama
-                  harganya. Menu-menu lainnya juga ngga bikin kantong bolong.
-                  Cocok buat mahasiswa yang pengen jajan jajan aja. Satu porsi
-                  bingsoo diisi kacang merah, es krim, lychee, koko crunch,
-                  jelly, poping boba dan mochi
+                  {restaurant.description}
                 </div>
               </div>
               <div className={styles.price}>
@@ -366,8 +468,7 @@ function RestaurantDetail(props) {
                   Location
                 </div>
                 <div className={styles["location-address"]}>
-                  {restaurant.location} Balubur Town Square, Lantai 3, Food
-                  Court, Jl. Taman Sari, Bandung Wetan, Bandung
+                  {restaurant.location}
                 </div>
               </div>
             </div>
@@ -390,15 +491,20 @@ function RestaurantDetail(props) {
             </Map>
           </div>
         </div>
-        <div className={styles.operation}>
-          <Link to={`/my-restaurants/`}>
-            <button className={styles.edit}>Edit</button>
-          </Link>
+        {user.userId == props.userId ? (
+          <div className={styles.operation}>
+            <Link to={`/${userId}/restaurants/${restaurantId}/edit`}>
+              <button className={styles.edit}>Edit</button>
+            </Link>
 
-          <Link to={`/my-restaurants/`}>
-            <button className={styles.delete}>Delete</button>
-          </Link>
-        </div>
+            <button className={styles.delete} onClick={() => setOnDelete(true)}>
+              Delete
+            </button>
+          </div>
+        ) : (
+          ""
+        )}
+
         <hr />
         <div className={styles.title2}>Add Review</div>
 
@@ -456,6 +562,13 @@ function RestaurantDetail(props) {
 
 const mapStateToProps = (state) => {
   return {
+    userId: state.authReducer.userId,
+    username: state.authReducer.username,
+    fullname: state.authReducer.fullname,
+    email: state.authReducer.email,
+    isVerified: state.authReducer.isVerified,
+    bio: state.authReducer.bio,
+    imageUrl: state.authReducer.imageUrl,
     isError: state.statusReducer.isError,
     isSuccess: state.statusReducer.isSuccess,
     isLoading: state.statusReducer.isLoading,
@@ -468,6 +581,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    authLogin: (dataLogin) => dispatch(authLogin(dataLogin)),
     getError: (status, errorSubject, errorMessage) =>
       dispatch(getError(status, errorSubject, errorMessage)),
     getSuccess: (status, successSubject, successMessage) =>

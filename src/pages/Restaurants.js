@@ -60,6 +60,7 @@ function Restaurants() {
                     id={restaurant.restaurantId}
                     createdDate={restaurant.createdDate}
                     username={restaurant.username}
+                    userId={restaurant.userId}
                     userImage={URL_API + restaurant.userImageUrl}
                     likes={restaurant.totalLikes}
                     dislikes={restaurant.totalDislikes}
@@ -78,6 +79,7 @@ function Restaurants() {
                     id={restaurant.restaurantId}
                     createdDate={restaurant.createdDate}
                     username={restaurant.username}
+                    userId={restaurant.userId}
                     userImage={URL_API + restaurant.userImageUrl}
                     likes={restaurant.totalLikes}
                     dislikes={restaurant.totalDislikes}

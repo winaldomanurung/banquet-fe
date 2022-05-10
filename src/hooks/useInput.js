@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const useInput = (validateValue, initialValue = "") => {
-  // console.log(initialValue);
+  console.log(initialValue);
   const [enteredValue, setEnteredValue] = useState(initialValue);
   const [isTouched, setIsTouched] = useState(false);
 
-  const valueIsValid = validateValue(enteredValue);
+  const valueIsValid = validateValue(enteredValue || initialValue);
   const hasError = !valueIsValid && isTouched;
 
   const valueChangeHandler = (event) => {
@@ -22,6 +22,8 @@ const useInput = (validateValue, initialValue = "") => {
     setIsTouched(false);
   };
 
+  console.log(enteredValue);
+
   return {
     value: enteredValue,
     isValid: valueIsValid,
@@ -30,7 +32,46 @@ const useInput = (validateValue, initialValue = "") => {
     inputBlurHandler,
     reset,
     isTouched,
+    initialValue: initialValue,
   };
 };
 
 export default useInput;
+
+// Sebelum edit restaurant
+// import { useState } from "react";
+
+// const useInput = (validateValue, initialValue = "") => {
+//   // console.log(initialValue);
+//   const [enteredValue, setEnteredValue] = useState(initialValue);
+//   const [isTouched, setIsTouched] = useState(false);
+
+//   const valueIsValid = validateValue(enteredValue);
+//   const hasError = !valueIsValid && isTouched;
+
+//   const valueChangeHandler = (event) => {
+//     setEnteredValue(event.target.value);
+//   };
+
+//   const inputBlurHandler = (event) => {
+//     console.log(isTouched);
+//     setIsTouched(true);
+//   };
+
+//   const reset = () => {
+//     setEnteredValue("");
+//     setIsTouched(false);
+//   };
+
+//   return {
+//     value: enteredValue,
+//     isValid: valueIsValid,
+//     hasError,
+//     valueChangeHandler,
+//     inputBlurHandler,
+//     reset,
+//     isTouched,
+//   };
+// };
+
+// export default useInput;

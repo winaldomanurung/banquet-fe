@@ -7,7 +7,7 @@ import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 
 const RestaurantCard = (props) => {
-  // console.log(props);
+  console.log(props.userId);
   return (
     <div className={styles.card}>
       <Link
