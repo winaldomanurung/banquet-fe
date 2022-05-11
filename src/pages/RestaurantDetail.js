@@ -336,7 +336,7 @@ function RestaurantDetail(props) {
     axios
       .post(URL_API + "/reactions/add-review", {
         restaurantId: restaurantId,
-        userId: userId,
+        userId: props.userId,
         reviewTitle: enteredTitle,
         reviewDescription: enteredDescription,
       })
@@ -568,17 +568,20 @@ function RestaurantDetail(props) {
                   </div>
                 </div>
                 <div className={styles.comment}>
-                  <FaRegComments
-                    size={"2em"}
-                    className={styles["button-dislike"]}
-                    color="#2175f3"
-                    onMouseOver={({ target }) => {
-                      target.style.color = "#1e66d3";
-                    }}
-                    onMouseOut={({ target }) => {
-                      target.style.color = "#2175f3";
-                    }}
-                  />
+                  <a href="#reviews">
+                    <FaRegComments
+                      size={"2em"}
+                      className={styles["button-dislike"]}
+                      color="#2175f3"
+
+                      // onMouseOver={({ target }) => {
+                      //   target.style.color = "#1e66d3";
+                      // }}
+                      // onMouseOut={({ target }) => {
+                      //   target.style.color = "#2175f3";
+                      // }}
+                    />
+                  </a>{" "}
                   <div className={styles.counter}>
                     {counter == {} ? 0 : counter.total_reviews}
                   </div>
@@ -696,7 +699,7 @@ function RestaurantDetail(props) {
         </form>
         {reviews.length ? <hr /> : ""}
         {reviews.length ? (
-          <div className={styles["review-container"]}>
+          <div className={styles["review-container"]} id="reviews">
             <div className={styles.title}>Reviews</div>
             {mapComments()}
           </div>
