@@ -27,7 +27,7 @@ function Login(props) {
   let navigate = useNavigate();
   const backToHome = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/profile", { replace: true });
     }
   };
@@ -87,12 +87,10 @@ function Login(props) {
         password: enteredPassword,
       })
       .then((res) => {
-        console.log(res);
         // res.data.dataLogin akan kita kirim ke dalam Redux
 
         // localStorage.setItem("token_shutter", res.data.token);
         // expTime dirubah ke string karena nantinya akan diubah authCtx jadi ms
-        console.log(res.data.token);
         props.authLogin(res.data.dataUser);
         props.getLoading(false);
         // props.getSuccess(true, res.data.subject, res.data.message);
@@ -114,14 +112,10 @@ function Login(props) {
           err.response.data.subject,
           err.response.data.message
         );
-        console.log(err.response.data.subject);
-        console.log(err.response.data.message);
       });
     resetCredentialInput();
     resetPasswordInput();
   };
-  // console.log(props.errorSubject);
-  // console.log(props.errorMessage);
   backToHome();
 
   return (

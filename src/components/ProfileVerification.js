@@ -19,12 +19,12 @@ function ProfileVerification(props) {
         email: props.email,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         props.getLoading(false);
         props.getError(
           true,

@@ -11,8 +11,8 @@ import { getSuccess, getError, getLoading } from "../actions";
 import ErrorModal from "../components/ErrorModal";
 import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
-import { FormCheck } from "react-bootstrap";
 import AuthContext from "../store/auth-context";
+import { restaurantData } from "../actions";
 
 function AddRestaurant(props) {
   const authCtx = useContext(AuthContext);
@@ -27,7 +27,7 @@ function AddRestaurant(props) {
   let navigate = useNavigate();
   const goToLogin = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/login", { replace: true });
     }
   };
@@ -37,19 +37,17 @@ function AddRestaurant(props) {
     axios
       .get(URL_API + `/restaurants/${restaurantId}`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data.dataUser);
         setRestaurant(res.data.dataUser);
+        props.restaurantData(res.data.dataUser);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
 
-  console.log(restaurant.name);
-
   goToLogin();
 
-  console.log(userId);
   const [addFile, setAddFile] = useState(null);
   const [typeIsClicked, setTypeIsClicked] = useState(null);
   const [inputFileIsClicked, setInputFileIsClicked] = useState(null);
@@ -73,7 +71,7 @@ function AddRestaurant(props) {
     reset: resetNameInput,
     isTouched: isNameTouched,
     initialValue: initialName,
-  } = useInput(nameValidation, restaurant.name);
+  } = useInput(nameValidation, props.restaurantName);
 
   const {
     value: enteredLocation,
@@ -84,15 +82,13 @@ function AddRestaurant(props) {
     reset: resetLocationInput,
     isTouched: isLocationTouched,
     initialValue: initialLocation,
-  } = useInput(locationValidation, restaurant.location);
+  } = useInput(locationValidation, props.restaurantLocation);
 
   const {
     value: enteredType,
     valueChangeHandler: typeChangeHandler,
     reset: resetTypeInput,
-  } = useInput(typeValidation);
-
-  console.log(enteredType, restaurant.type);
+  } = useInput(typeValidation, props.restaurantType);
 
   const {
     value: enteredPrice,
@@ -103,7 +99,7 @@ function AddRestaurant(props) {
     reset: resetPriceInput,
     isTouched: isPriceTouched,
     initialValue: initialPrice,
-  } = useInput(priceValidation, restaurant.price);
+  } = useInput(priceValidation, props.restaurantPrice);
 
   const {
     value: enteredDescription,
@@ -114,12 +110,12 @@ function AddRestaurant(props) {
     reset: resetDescriptionInput,
     isTouched: isDescriptionTouched,
     initialValue: initialDescription,
-  } = useInput(descriptionValidation, restaurant.description);
+  } = useInput(descriptionValidation, props.restaurantDescription);
 
   let preview = document.getElementById("imgpreview");
   const onBtnAddFile = (e) => {
-    console.log(e);
-    console.log(e.target.files[0]);
+    // console.log(e);
+    // console.log(e.target.files[0]);
     setAddFile(e.target.files);
     if (e.target.files[0]) {
       function createImageItem(i) {
@@ -136,40 +132,8 @@ function AddRestaurant(props) {
     }
   };
 
-  console.log(enteredName);
-  console.log(enteredLocation);
-  console.log(enteredType);
-  console.log(enteredPrice);
-  console.log(enteredDescription);
-  console.log(enteredNameIsValid);
-  console.log(enteredLocationIsValid);
-  // console.log(enteredTypeIsValid);
-  console.log(enteredPriceIsValid);
-  console.log(enteredDescriptionIsValid);
-
   // Pengecekan form validity
   let formIsValid = false;
-
-  // Custom error
-  // let enteredTypeIsValid;
-  // let typeInputHasError;
-  // if (typeIsClicked == true && typeIsFocused == false && enteredType == "") {
-  //   enteredTypeIsValid = false;
-  //   typeInputHasError = true;
-  // } else {
-  //   enteredTypeIsValid = true;
-  //   typeInputHasError = false;
-  // }
-
-  // let enteredFileIsValid;
-  // let fileInputHasError;
-  // if (inputFileIsClicked == true && !addFile) {
-  //   enteredFileIsValid = false;
-  //   fileInputHasError = true;
-  // } else {
-  //   enteredFileIsValid = true;
-  //   fileInputHasError = false;
-  // }
 
   if (
     enteredNameIsValid &&
@@ -180,12 +144,9 @@ function AddRestaurant(props) {
     formIsValid = true;
   }
 
-  console.log(addFile);
-
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    console.log(formIsValid);
     setTypeIsClicked(false);
     setInputFileIsClicked(false);
     preview.replaceChildren();
@@ -210,7 +171,7 @@ function AddRestaurant(props) {
         : restaurant.description,
     };
 
-    console.log(obj);
+    // console.log(obj);
     // // Masukkan body nya
     // formData.append("data", JSON.stringify(obj));
     // // Masukkan file nya
@@ -229,8 +190,7 @@ function AddRestaurant(props) {
     axios
       .patch(URL_API + `/restaurants/${restaurantId}`, obj)
       .then((res) => {
-        console.log("Masok");
-        // console.log(res.data);
+        props.restaurantData(res.data.dataUser);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetNameInput();
@@ -272,14 +232,6 @@ function AddRestaurant(props) {
   } else {
     errorMessage = "";
   }
-
-  console.log(formIsValid);
-  console.log(
-    enteredNameIsValid,
-    enteredLocationIsValid,
-    enteredPriceIsValid,
-    enteredDescriptionIsValid
-  );
 
   return (
     <div className={styles.container}>
@@ -332,7 +284,7 @@ function AddRestaurant(props) {
             className={`${styles.input} ${nameInputClasses}`}
             onChange={nameChangeHandler}
             onBlur={nameBlurHandler}
-            value={enteredName ? enteredName : initialName}
+            value={enteredName}
           />
           <label for="location">Location</label>
           <input
@@ -343,7 +295,7 @@ function AddRestaurant(props) {
             className={`${styles.input} ${locationInputClasses}`}
             onChange={locationChangeHandler}
             onBlur={locationBlurHandler}
-            value={enteredLocation ? enteredLocation : initialLocation}
+            value={enteredLocation}
           />
           <label for="type">Type</label>
           <select
@@ -380,7 +332,7 @@ function AddRestaurant(props) {
             className={`${styles.input} ${priceInputClasses}`}
             onChange={priceChangeHandler}
             onBlur={priceBlurHandler}
-            value={enteredPrice ? enteredPrice : initialPrice}
+            value={enteredPrice}
           />
           <label for="description">Description</label>
           <textarea
@@ -392,7 +344,7 @@ function AddRestaurant(props) {
             className={`${styles.input} ${descriptionInputClasses}`}
             onChange={descriptionChangeHandler}
             onBlur={descriptionBlurHandler}
-            value={enteredDescription ? enteredDescription : initialDescription}
+            value={enteredDescription}
           />
           <div>
             <label htmlFor="img" onClick={() => setInputFileIsClicked(true)}>
@@ -425,7 +377,7 @@ function AddRestaurant(props) {
             }
             disabled={!formIsValid}
           >
-            Add Restaurant{" "}
+            Edit Restaurant{" "}
           </button>
         </form>
       </div>
@@ -442,6 +394,11 @@ const mapStateToProps = (state) => {
     successSubject: state.statusReducer.successSubject,
     errorMessage: state.statusReducer.errorMessage,
     successMessage: state.statusReducer.successMessage,
+    restaurantName: state.restaurantReducer.name,
+    restaurantLocation: state.restaurantReducer.location,
+    restaurantType: state.restaurantReducer.type,
+    restaurantPrice: state.restaurantReducer.price,
+    restaurantDescription: state.restaurantReducer.description,
   };
 };
 
@@ -452,6 +409,7 @@ const mapDispatchToProps = (dispatch) => {
     getSuccess: (status, successSubject, successMessage) =>
       dispatch(getSuccess(status, successSubject, successMessage)),
     getLoading: (status) => dispatch(getLoading(status)),
+    restaurantData: (data) => dispatch(restaurantData(data)),
   };
 };
 

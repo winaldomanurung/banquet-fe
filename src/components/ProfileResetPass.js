@@ -25,7 +25,7 @@ function ProfileResetPass(props) {
     isTouched: isEmailTouched,
   } = useInput(emailValidation);
 
-  console.log(enteredEmail, enteredEmailIsValid, emailInputHasError);
+  // console.log(enteredEmail, enteredEmailIsValid, emailInputHasError);
 
   if (enteredEmailIsValid) {
     formIsValid = true;
@@ -43,12 +43,12 @@ function ProfileResetPass(props) {
         email: enteredEmail,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         props.getLoading(false);
         props.getError(
           true,

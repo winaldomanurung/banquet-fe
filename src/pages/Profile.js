@@ -19,7 +19,6 @@ import { connect } from "react-redux";
 
 function Profile(props) {
   const authCtx = useContext(AuthContext);
-  console.log(authCtx.token);
 
   axios
     .get(URL_API + "/users/retrieve-data", {
@@ -28,17 +27,15 @@ function Profile(props) {
       },
     })
     .then((res) => {
-      console.log(res.data);
       props.authLogin(res.data.dataUser);
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
     });
 
   const location = useLocation();
 
   const [isActivePath, setIsActivePath] = useState(location.pathname);
-  console.log(isActivePath);
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>My Profile</h1>

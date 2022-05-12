@@ -25,14 +25,13 @@ function AddRestaurant(props) {
   let navigate = useNavigate();
   const goToLogin = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/login", { replace: true });
     }
   };
 
   goToLogin();
 
-  console.log(userId);
   const [addFile, setAddFile] = useState(null);
   const [typeIsClicked, setTypeIsClicked] = useState(null);
   const [inputFileIsClicked, setInputFileIsClicked] = useState(null);
@@ -73,8 +72,6 @@ function AddRestaurant(props) {
     reset: resetTypeInput,
   } = useInput(typeValidation);
 
-  console.log(enteredType);
-
   const {
     value: enteredPrice,
     isValid: enteredPriceIsValid,
@@ -97,8 +94,8 @@ function AddRestaurant(props) {
 
   let preview = document.getElementById("imgpreview");
   const onBtnAddFile = (e) => {
-    console.log(e);
-    console.log(e.target.files[0]);
+    // console.log(e);
+    // console.log(e.target.files[0]);
     setAddFile(e.target.files);
     if (e.target.files[0]) {
       function createImageItem(i) {
@@ -152,12 +149,9 @@ function AddRestaurant(props) {
     formIsValid = true;
   }
 
-  console.log(addFile);
-
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    console.log(formIsValid);
     setTypeIsClicked(false);
     setInputFileIsClicked(false);
     preview.replaceChildren();
@@ -180,7 +174,6 @@ function AddRestaurant(props) {
       description: enteredDescription,
     };
 
-    console.log(obj);
     // Masukkan body nya
     formData.append("data", JSON.stringify(obj));
     // Masukkan file nya
@@ -189,18 +182,16 @@ function AddRestaurant(props) {
       formData.append("file", file);
     }
 
-    console.log(addFile);
+    // console.log(addFile);
 
-    for (var pair of formData.entries()) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ", " + pair[1]);
+    // }
 
     //buat requestnya
     axios
       .post(URL_API + "/restaurants", formData)
       .then((res) => {
-        console.log("Masok");
-        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetNameInput();
@@ -210,7 +201,7 @@ function AddRestaurant(props) {
         resetDescriptionInput();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -247,16 +238,6 @@ function AddRestaurant(props) {
   } else {
     errorMessage = "";
   }
-
-  console.log(formIsValid);
-  console.log(
-    enteredNameIsValid,
-    enteredLocationIsValid,
-    enteredTypeIsValid,
-    enteredPriceIsValid,
-    enteredDescriptionIsValid,
-    enteredFileIsValid
-  );
 
   return (
     <div className={styles.container}>

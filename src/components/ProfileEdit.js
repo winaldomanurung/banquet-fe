@@ -16,7 +16,7 @@ import SuccessModal from "./SuccessModal";
 import Spinner from "./Spinner";
 
 function ProfileEdit(props) {
-  console.log(props);
+  // console.log(props);
   const [redirect, setRedirect] = useState(false);
 
   // Untuk upload file logic
@@ -24,18 +24,17 @@ function ProfileEdit(props) {
   const [addFile, setAddFile] = useState(null);
 
   const onBtnAddFile = (e) => {
-    console.log(e);
-    console.log(e.target.files[0]);
+    // console.log(e);
+    // console.log(e.target.files[0]);
     if (e.target.files[0]) {
-      // setAddFilename(e.target.files[0].name);
       setAddFile(e.target.files[0]);
       //untuk preview image
       let preview = document.getElementById("imgpreview");
       preview.src = URL.createObjectURL(e.target.files[0]);
     }
   };
-  // CHECKPOINT
-  console.log("DATA ALBUM: ", props.dataAlbum);
+
+  // console.log("DATA ALBUM: ", props.dataAlbum);
 
   const onBtnUpload = () => {
     //cek apa file sudah ada
@@ -59,14 +58,14 @@ function ProfileEdit(props) {
 
       //kita masukkan file nya
       formData.append("file", addFile);
-      console.log("berhasil append");
+      // console.log("berhasil append");
       // buat requestnya
       props.getLoading(true);
       axios
         .post(URL_API + `/users/${props.userId}/upload-img`, formData)
         .then((res) => {
           // alert(res.data.message);
-          console.log(res);
+          // console.log(res);
 
           props.authLogin({ imageUrl: res.data.dataUser });
           setAddFile(null);
@@ -74,14 +73,12 @@ function ProfileEdit(props) {
           props.getSuccess(true, res.data.subject, res.data.message);
         })
         .catch((err) => {
-          console.log("nyampe");
           props.getLoading(false);
           props.getError(
             true,
             err.response.data.subject,
             err.response.data.message
           );
-          console.log("kena error");
           console.log(err);
         });
     }
@@ -92,13 +89,13 @@ function ProfileEdit(props) {
   let navigate = useNavigate();
   const backToHome = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/profile", { replace: true });
     }
   };
 
   const fullnameValidation = (fullname) =>
-    fullname.trim() !== "" && fullname.length >= 3;
+    fullname.length !== 0 && fullname.length >= 3;
 
   const usernameValidation = (username) =>
     username.trim() !== "" && username.length >= 3;
@@ -137,10 +134,6 @@ function ProfileEdit(props) {
     isTouched: isBioTouched,
   } = useInput(bioValidation, props.bio);
 
-  console.log(enteredFullname);
-  console.log(enteredUsername);
-  console.log(enteredBio);
-
   let formIsValid = false;
 
   if (enteredUsernameIsValid && enteredFullnameIsValid && enteredBioIsValid) {
@@ -152,9 +145,9 @@ function ProfileEdit(props) {
 
   let errorMessage;
   let errorLogo = <RiErrorWarningFill size={"1.5em"} color="#b40e0e" />;
-  if (fullnameInputHasError && isFullnameTouched) {
+  if (fullnameInputHasError) {
     errorMessage = " Fullname should contain at least 3 characters!";
-  } else if (usernameInputHasError && isUsernameTouched) {
+  } else if (usernameInputHasError) {
     errorMessage = " Username should contain at least 3 characters!";
   } else {
     errorMessage = "";
@@ -162,20 +155,12 @@ function ProfileEdit(props) {
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    // if (!formIsValid) {
-    //   return;
-    // }
-    console.log(props.fullname);
-    console.log(props.username);
-    console.log(props.bio);
-    console.log(props.isSuccess);
-    console.log(props.isError);
     props.getLoading(true);
 
     axios
       .patch(URL_API + `/users/${props.userId}`, {
-        fullname: enteredFullname || props.fullname,
-        username: enteredUsername || props.username,
+        fullname: enteredFullname,
+        username: enteredUsername,
         bio: enteredBio || props.bio,
       })
       .then((res) => {
@@ -192,10 +177,7 @@ function ProfileEdit(props) {
           err.response.data.subject,
           err.response.data.message
         );
-        console.log("kena error");
-        console.log(err);
-
-        console.log(err.response.data);
+        // console.log(err);
       });
   };
 
@@ -209,7 +191,6 @@ function ProfileEdit(props) {
     }
     return true;
   };
-  console.log(submitLogic());
 
   return (
     <div className={styles.container}>
@@ -282,7 +263,7 @@ function ProfileEdit(props) {
               {errorMessage == "" ? "" : errorLogo}
               {errorMessage}
             </p>
-            <label for="fullname">
+            <label htmlFor="fullname">
               <FaRegUser
                 size={"1.2em"}
                 color="#414141"
@@ -296,13 +277,13 @@ function ProfileEdit(props) {
               id="fullname"
               placeholder="Your fullname..."
               className={`${styles.input} ${fullnameInputClasses}`}
-              defaultValue={props.fullname}
+              // defaultValue={props.fullname}
               onChange={fullnameChangeHandler}
               onBlur={fullnameBlurHandler}
-              value={enteredFullname || props.fullname}
+              value={enteredFullname}
             />
 
-            <label for="username">
+            <label htmlFor="username">
               <FaRegUserCircle
                 size={"1.2em"}
                 color="#414141"
@@ -316,13 +297,13 @@ function ProfileEdit(props) {
               id="username"
               placeholder="Your username..."
               className={`${styles.input} ${usernameInputClasses}`}
-              defaultValue={props.username}
+              // defaultValue={props.username}
               onChange={usernameChangeHandler}
               onBlur={usernameBlurHandler}
-              value={enteredUsername || props.username}
+              value={enteredUsername}
             />
 
-            <label for="bio">
+            <label htmlFor="bio">
               <BsChatLeftQuote
                 size={"1.2em"}
                 color="#414141"
@@ -336,10 +317,10 @@ function ProfileEdit(props) {
               id="bio"
               placeholder="Your bio..."
               className={`${styles.input}`}
-              defaultValue={props.bio}
+              // defaultValue={props.bio}
               onChange={bioChangeHandler}
               onBlur={bioBlurHandler}
-              value={enteredBio || props.bio}
+              value={enteredBio}
             />
           </div>
         </div>

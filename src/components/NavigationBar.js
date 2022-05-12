@@ -13,7 +13,6 @@ function NavigationBar(props) {
   // Check user login dengan menggunakan context
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
-  console.log(isLoggedIn);
 
   // console.log("PROPS", props.userId);
   const logoutHandler = () => {
@@ -48,13 +47,14 @@ function NavigationBar(props) {
             )}
             <Nav.Link eventKey="2">
               <Link
-                to="/restaurants"
+                // to={props.isVerified ? "/restaurants" : "profile/verification"}
+                to={"/restaurants"}
                 style={{ textDecoration: "none", color: "#0b0b0b" }}
               >
                 Restaurants
               </Link>
             </Nav.Link>
-            {isLoggedIn ? (
+            {isLoggedIn && props.isVerified ? (
               <Nav.Link eventKey="3">
                 <Link
                   to={`/${props.userId}/my-restaurants`}
@@ -83,14 +83,18 @@ function NavigationBar(props) {
             </Nav>
           ) : (
             <Nav>
-              <Nav.Link eventKey="7" className={styles.add}>
-                <Link
-                  className={styles["add-link"]}
-                  to={`/${props.userId}/add-restaurant`}
-                >
-                  <MdAdd size={"1.5em"} color="white" /> Add Place
-                </Link>
-              </Nav.Link>
+              {props.isVerified ? (
+                <Nav.Link eventKey="7" className={styles.add}>
+                  <Link
+                    className={styles["add-link"]}
+                    to={`/${props.userId}/add-restaurant`}
+                  >
+                    <MdAdd size={"1.5em"} color="white" /> Add Place
+                  </Link>
+                </Nav.Link>
+              ) : (
+                ""
+              )}
               <Nav.Link eventKey="6" className={styles.logout}>
                 <Link
                   to="/"

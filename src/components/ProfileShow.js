@@ -3,11 +3,11 @@ import styles from "./ProfileShow.module.css";
 import profpicDefault from "../img/profpicDefault.png";
 import { connect } from "react-redux";
 import { FaRegUser, FaRegUserCircle } from "react-icons/fa";
+import { AiOutlineMail } from "react-icons/ai";
 import { BsPatchCheck } from "react-icons/bs";
 import { URL_API } from "../helpers";
 
 function ProfileShow(props) {
-  console.log(props.username);
   return (
     <div className={styles.container}>
       <form className={styles.form}>
@@ -61,6 +61,22 @@ function ProfileShow(props) {
               id="username"
               className={styles.input}
               value={props.username}
+              readOnly
+            />
+            <label for="email">
+              <AiOutlineMail
+                size={"1.2em"}
+                color="#414141"
+                className={styles.icon}
+                readOnly
+              />
+              Email
+            </label>
+            <input
+              type="text"
+              id="email"
+              className={styles.input}
+              value={props.email}
               readOnly
             />
 

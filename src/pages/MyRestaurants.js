@@ -22,7 +22,7 @@ function MyRestaurants() {
   let navigate = useNavigate();
   const goToLogin = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/login", { replace: true });
     }
   };
@@ -32,8 +32,6 @@ function MyRestaurants() {
     `/restaurants/${userId}/my-restaurants`
   );
 
-  console.log(dataRestaurants);
-
   const observer = useRef();
   const lastDataElementRef = useCallback(
     (node) => {
@@ -42,20 +40,15 @@ function MyRestaurants() {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          console.log("visible");
+          // console.log("visible");
           setPageNumber((pageNumber) => pageNumber + 1);
         }
       });
 
       if (node) observer.current.observe(node);
-      console.log(node);
     },
     [loading, hasMore]
   );
-  console.log(hasMore);
-  console.log(loading);
-  console.log(error);
-  console.log(pageNumber);
 
   goToLogin();
 

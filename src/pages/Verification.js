@@ -18,13 +18,12 @@ function Verification(props) {
   const [redirect, setRedirect] = useState(false);
 
   const [isVerified, setIsVerified] = useState(false);
-  console.log(params);
 
   let navigate = useNavigate();
 
   const backToHome = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/", { replace: true });
     }
   };

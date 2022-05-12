@@ -116,6 +116,12 @@
   flex-direction: column;
 }
 
+.type {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+}
+
 .price {
   display: flex;
   flex-direction: column;
@@ -133,6 +139,7 @@
 }
 
 .description-title,
+.type-title,
 .price-title,
 .location-title {
   font-size: 1em;
@@ -147,6 +154,7 @@
   flex-direction: row;
 }
 .description-content,
+.type-content,
 .price-content,
 .location-address {
   text-align: justify;
@@ -365,11 +373,13 @@ input:focus::placeholder {
   }
 
   .description-title,
+  .type-title,
   .price-title,
   .location-title {
     margin-left: 0;
   }
   .description-content,
+  .type-content,
   .price-content,
   .location-address {
     margin-left: 0;

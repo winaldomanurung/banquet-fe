@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { URL_API } from "../helpers";
 import styles from "./RestaurantDetail.module.css";
@@ -8,10 +8,10 @@ import { MdOutlineDescription } from "react-icons/md";
 import {
   FaRegMoneyBillAlt,
   FaMapMarkerAlt,
-  FaComments,
   FaRegComments,
 } from "react-icons/fa";
 import { GoLocation } from "react-icons/go";
+import { IoIosRestaurant } from "react-icons/io";
 import {
   AiFillLike,
   AiFillDislike,
@@ -30,10 +30,10 @@ import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
 import AuthContext from "../store/auth-context";
 import { authLogin } from "../actions";
+import { restaurantData } from "../actions";
 
 function RestaurantDetail(props) {
   const params = useParams();
-  console.log(params);
   const restaurantId = params.restaurantId;
   const userId = params.userId;
   const [onDelete, setOnDelete] = useState(false);
@@ -67,13 +67,12 @@ function RestaurantDetail(props) {
     axios
       .get(URL_API + `/restaurants/${restaurantId}`)
       .then((res) => {
-        console.log(res.data);
         setRestaurant(res.data.dataUser);
+        props.restaurantData(res.data.dataUser);
         setLong(res.data.dataUser.coordinate.y);
         setLat(res.data.dataUser.coordinate.x);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -88,11 +87,9 @@ function RestaurantDetail(props) {
     axios
       .get(URL_API + `/users/${userId}`)
       .then((res) => {
-        console.log(res.data);
         setUser(res.data.dataUser);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -101,8 +98,6 @@ function RestaurantDetail(props) {
         );
       });
   }, []);
-
-  console.log(props.userId);
 
   // Ambil data user yang login
   useEffect(() => {
@@ -113,26 +108,20 @@ function RestaurantDetail(props) {
         },
       })
       .then((res) => {
-        console.log(res.data);
         props.authLogin(res.data.dataUser);
 
         return res.data.dataUser.userId;
       })
       .then((userIdLogin) => {
-        console.log("masuk kedua");
-        console.log(userIdLogin);
         axios
           .get(
             URL_API + `/reactions/${restaurantId}/get-reactions/${userIdLogin}`
           )
           .then((res2) => {
             setReactionChange(false);
-
-            console.log(res2.data.dataUser);
             setUserLoginReaction(res2.data.dataUser);
           })
           .catch((err) => {
-            console.log(err);
             props.getLoading(false);
             props.getError(
               true,
@@ -142,13 +131,7 @@ function RestaurantDetail(props) {
           });
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
-        props.getError(
-          true,
-          err.response.data.subject,
-          err.response.data.message
-        );
       });
   }, [reactionChange]);
 
@@ -157,11 +140,9 @@ function RestaurantDetail(props) {
     axios
       .get(URL_API + `/restaurants/${restaurantId}/images`)
       .then((res) => {
-        console.log(res.data);
         setImages(res.data.dataUser);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -176,11 +157,9 @@ function RestaurantDetail(props) {
     axios
       .get(URL_API + `/reactions/${restaurantId}/get-reviews`)
       .then((res) => {
-        console.log(res.data);
         setReviews(res.data.dataUser);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -195,11 +174,9 @@ function RestaurantDetail(props) {
     axios
       .get(URL_API + `/reactions/counter/${restaurantId}`)
       .then((res) => {
-        console.log(res.data);
         setCounter(res.data.dataUser);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -208,7 +185,6 @@ function RestaurantDetail(props) {
         );
       });
   }, [reactionChange]);
-  console.log(props.userId);
 
   // // Reaction by user yang sedang login
   // useEffect(() => {
@@ -231,22 +207,14 @@ function RestaurantDetail(props) {
   //     });
   // }, []);
 
-  console.log(counter);
-  console.log(userLoginReaction);
-
-  console.log(restaurant);
-  console.log(images);
-  console.log(reviews);
-
   const mapImages = () => {
     return images.map((image, index) => {
       return (
-        <Carousel.Item>
+        <Carousel.Item key={index}>
           <img
             // className="d-block w-100"
             src={URL_API + image.imageUrl}
             alt={`Resaturant image ${[index]}`}
-            key={index}
             className={styles["restaurant-image"]}
           />
         </Carousel.Item>
@@ -257,7 +225,7 @@ function RestaurantDetail(props) {
   const mapComments = () => {
     return reviews.map((review, index) => {
       return (
-        <div className={styles.review}>
+        <div className={styles.review} key={index}>
           <div className={styles["review-user"]}>
             <img
               className={styles["user-image"]}
@@ -273,20 +241,13 @@ function RestaurantDetail(props) {
             </div>
           </div>
           <div className={styles["content-reaction"]}>
-            {
-              // if(review.likes == 1){
-              //   return <AiFillLike size={"2em"} color="#069A8E" />
-              // } else {
-
-              // }
-              (review.likes && <AiFillLike size={"2em"} color="#069A8E" />) ||
-                (review.dislikes && (
-                  <AiFillDislike size={"2em"} color="#f47174" />
-                )) ||
-                (!review.dislikes && !review.likes && (
-                  <GoDash size={"2em"} color="#808080" />
-                ))
-            }
+            {(review.likes && <AiFillLike size={"2em"} color="#069A8E" />) ||
+              (review.dislikes && (
+                <AiFillDislike size={"2em"} color="#f47174" />
+              )) ||
+              (!review.dislikes && !review.likes && (
+                <GoDash size={"2em"} color="#808080" />
+              ))}
           </div>
         </div>
       );
@@ -325,7 +286,6 @@ function RestaurantDetail(props) {
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    console.log(formIsValid);
 
     if (!formIsValid) {
       return;
@@ -341,15 +301,12 @@ function RestaurantDetail(props) {
         reviewDescription: enteredDescription,
       })
       .then((res) => {
-        console.log("Masok");
-        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetTitleInput();
         resetDescriptionInput();
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -368,15 +325,12 @@ function RestaurantDetail(props) {
     axios
       .delete(URL_API + `/restaurants/${restaurantId}`)
       .then((res) => {
-        console.log("Masok");
-        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetTitleInput();
         resetDescriptionInput();
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -403,14 +357,14 @@ function RestaurantDetail(props) {
     errorMessage = "";
   }
 
-  console.log(formIsValid);
-  console.log(
-    enteredTitleIsValid,
-
-    enteredDescriptionIsValid
-  );
-
   const likeHandler = () => {
+    if (!isLoggedIn) {
+      return props.getError(
+        true,
+        "Please login!",
+        "You have to login to leave a 'Like'!"
+      );
+    }
     props.getLoading(true);
 
     axios
@@ -420,14 +374,12 @@ function RestaurantDetail(props) {
         like: 1,
       })
       .then((res) => {
-        console.log("Masok");
         setReactionChange(true);
-        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -438,6 +390,13 @@ function RestaurantDetail(props) {
   };
 
   const dislikeHandler = () => {
+    if (!isLoggedIn) {
+      return props.getError(
+        true,
+        "Please login!",
+        "You have to login to leave a 'Dislike'!"
+      );
+    }
     props.getLoading(true);
 
     axios
@@ -447,14 +406,11 @@ function RestaurantDetail(props) {
         dislike: 1,
       })
       .then((res) => {
-        console.log("Masok");
         setReactionChange(true);
-        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -464,7 +420,15 @@ function RestaurantDetail(props) {
       });
   };
 
-  console.log(userLoginReaction);
+  const reviewHandler = () => {
+    if (counter.total_reviews == 0) {
+      return props.getError(
+        true,
+        "No review found",
+        "This restaurant doesn't have any reviews yet."
+      );
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -567,19 +531,12 @@ function RestaurantDetail(props) {
                     {counter == {} ? 0 : counter.total_dislikes}
                   </div>
                 </div>
-                <div className={styles.comment}>
+                <div className={styles.comment} onClick={reviewHandler}>
                   <a href="#reviews">
                     <FaRegComments
                       size={"2em"}
                       className={styles["button-dislike"]}
                       color="#2175f3"
-
-                      // onMouseOver={({ target }) => {
-                      //   target.style.color = "#1e66d3";
-                      // }}
-                      // onMouseOut={({ target }) => {
-                      //   target.style.color = "#2175f3";
-                      // }}
                     />
                   </a>{" "}
                   <div className={styles.counter}>
@@ -599,6 +556,15 @@ function RestaurantDetail(props) {
                 <div className={styles["description-content"]}>
                   {restaurant.description}
                 </div>
+              </div>
+              <div className={styles.type}>
+                <div className={styles["type-title"]}>
+                  <div className={styles.logo}>
+                    <IoIosRestaurant size={"1.5em"} color="white" />
+                  </div>
+                  Type
+                </div>
+                <div className={styles["type-content"]}>{restaurant.type}</div>
               </div>
               <div className={styles.price}>
                 <div className={styles["price-title"]}>
@@ -632,7 +598,6 @@ function RestaurantDetail(props) {
                 latitude: lat,
                 zoom: 2.8,
               }}
-              // style={{ width: "500px", height: "500px" }}
               mapStyle="mapbox://styles/mapbox/streets-v9"
               mapboxAccessToken="pk.eyJ1Ijoid2luYWxkb21hbnVydW5nIiwiYSI6ImNrb2h5Ymo5MDA1eWQydnFlZzh6bTJjaTYifQ.58ZziMs2G-MCmfCQUkLOTg"
             >
@@ -656,47 +621,56 @@ function RestaurantDetail(props) {
           ""
         )}
 
-        <hr />
-        <div className={styles.title2}>Add Review</div>
+        {isLoggedIn ? (
+          <div>
+            <hr />
+            <div className={styles.title2}>Add Review</div>
 
-        <form className={styles.form} onSubmit={formSubmissionHandler}>
-          <p className={errorMessage ? styles.error : styles.errorHide}>
-            {errorMessage == "" ? "" : errorLogo}
-            {errorMessage}
-          </p>
-          <label for="title">Title</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            placeholder="Review title..."
-            className={`${styles.input} ${titleInputClasses}`}
-            onChange={titleChangeHandler}
-            onBlur={titleBlurHandler}
-            value={enteredTitle}
-          />
+            <form className={styles.form} onSubmit={formSubmissionHandler}>
+              <p className={errorMessage ? styles.error : styles.errorHide}>
+                {errorMessage == "" ? "" : errorLogo}
+                {errorMessage}
+              </p>
+              <label for="title">Title</label>
+              <input
+                type="text"
+                name="title"
+                id="title"
+                placeholder="Review title..."
+                className={`${styles.input} ${titleInputClasses}`}
+                onChange={titleChangeHandler}
+                onBlur={titleBlurHandler}
+                value={enteredTitle}
+              />
 
-          <label for="description">Description</label>
-          <textarea
-            id="textarea"
-            name="textarea"
-            rows="4"
-            cols="50"
-            placeholder="Review description..."
-            className={`${styles.input} ${descriptionInputClasses}`}
-            onChange={descriptionChangeHandler}
-            onBlur={descriptionBlurHandler}
-            value={enteredDescription}
-          />
+              <label for="description">Description</label>
+              <textarea
+                id="textarea"
+                name="textarea"
+                rows="4"
+                cols="50"
+                placeholder="Review description..."
+                className={`${styles.input} ${descriptionInputClasses}`}
+                onChange={descriptionChangeHandler}
+                onBlur={descriptionBlurHandler}
+                value={enteredDescription}
+              />
 
-          <button
-            type="submit"
-            className={formIsValid ? styles.submit : styles["submit-disabled"]}
-            disabled={!formIsValid}
-          >
-            Submit Review{" "}
-          </button>
-        </form>
+              <button
+                type="submit"
+                className={
+                  formIsValid ? styles.submit : styles["submit-disabled"]
+                }
+                disabled={!formIsValid}
+              >
+                Submit Review{" "}
+              </button>
+            </form>
+          </div>
+        ) : (
+          ""
+        )}
+
         {reviews.length ? <hr /> : ""}
         {reviews.length ? (
           <div className={styles["review-container"]} id="reviews">
@@ -727,6 +701,11 @@ const mapStateToProps = (state) => {
     successSubject: state.statusReducer.successSubject,
     errorMessage: state.statusReducer.errorMessage,
     successMessage: state.statusReducer.successMessage,
+    restaurantName: state.restaurantReducer.name,
+    restaurantLocation: state.restaurantReducer.location,
+    restaurantType: state.restaurantReducer.type,
+    restaurantPrice: state.restaurantReducer.price,
+    restaurantDescription: state.restaurantReducer.description,
   };
 };
 
@@ -738,6 +717,7 @@ const mapDispatchToProps = (dispatch) => {
     getSuccess: (status, successSubject, successMessage) =>
       dispatch(getSuccess(status, successSubject, successMessage)),
     getLoading: (status) => dispatch(getLoading(status)),
+    restaurantData: (data) => dispatch(restaurantData(data)),
   };
 };
 

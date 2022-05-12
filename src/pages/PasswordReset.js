@@ -17,12 +17,11 @@ function PasswordReset(props) {
   const params = useParams();
   let navigate = useNavigate();
 
-  console.log(props.isError);
   const [redirect, setRedirect] = useState(false);
 
   const backToHome = () => {
     if (redirect) {
-      console.log("Redirect");
+      // console.log("Redirect");
       return navigate("/", { replace: true });
     }
   };
@@ -35,12 +34,9 @@ function PasswordReset(props) {
     })
     .then((res) => {
       console.log(res.data);
-      // props.getLoading(false);
     })
     .catch((err) => {
       console.log(err);
-      // return navigate("/", { replace: true });
-      // props.getLoading(false);
       props.getError(
         true,
         err.response.data.subject,
@@ -48,7 +44,6 @@ function PasswordReset(props) {
       );
     });
 
-  console.log(params);
   const passwordValidation = (password) =>
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
       password
@@ -58,7 +53,6 @@ function PasswordReset(props) {
 
   const [showPassword, setShowPassword] = useState(false);
   const checkboxHandler = (event) => {
-    // console.log(event.target.checked);
     setShowPassword(event.target.checked);
   };
 
@@ -91,7 +85,6 @@ function PasswordReset(props) {
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    console.log(formIsValid);
     if (!formIsValid) {
       return;
     }
@@ -108,12 +101,12 @@ function PasswordReset(props) {
         }
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -144,7 +137,6 @@ function PasswordReset(props) {
     errorMessage = "";
   }
 
-  console.log(formIsValid);
   backToHome();
 
   return (

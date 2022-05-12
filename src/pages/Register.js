@@ -97,7 +97,6 @@ function RegisterForm(props) {
   // Handler untuk form submission
   const formSubmissionHandler = (event) => {
     event.preventDefault();
-    console.log(formIsValid);
     if (!formIsValid) {
       return;
     }
@@ -111,7 +110,6 @@ function RegisterForm(props) {
         repeat_password: enteredRepeatPassword,
       })
       .then((res) => {
-        console.log(res.data);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
         resetUsernameInput();
@@ -120,7 +118,6 @@ function RegisterForm(props) {
         resetRepeatPasswordInput();
       })
       .catch((err) => {
-        console.log(err);
         props.getLoading(false);
         props.getError(
           true,
@@ -153,8 +150,6 @@ function RegisterForm(props) {
   } else {
     errorMessage = "";
   }
-
-  // console.log(formIsValid);
 
   return (
     <div className={styles.container}>
