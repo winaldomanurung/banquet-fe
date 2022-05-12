@@ -39,6 +39,7 @@ function usePagination(pageNumber, endpoint, userId = "") {
         // Ini artinya jika error dari cancel token maka gpp karena memang sengaja kita setting untuk error
         if (axios.isCancel(e)) return;
         setError(true);
+        setLoading(false);
       });
     // untuk menggunakan cleanup effect maka kita perlu return sebuah function dalam useEffect
     return () => cancel();

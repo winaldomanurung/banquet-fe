@@ -28,7 +28,9 @@ function AddRestaurant(props) {
   const goToLogin = () => {
     if (redirect) {
       // console.log("Redirect");
-      return navigate("/login", { replace: true });
+      return navigate(`/${userId}/restaurants/${restaurantId}`, {
+        replace: true,
+      });
     }
   };
 
@@ -260,6 +262,7 @@ function AddRestaurant(props) {
           message={props.successMessage}
           onConfirm={() => {
             props.getSuccess(false);
+            setRedirect(true);
           }}
         />
       ) : (
@@ -346,7 +349,7 @@ function AddRestaurant(props) {
             onBlur={descriptionBlurHandler}
             value={enteredDescription}
           />
-          <div>
+          {/* <div>
             <label htmlFor="img" onClick={() => setInputFileIsClicked(true)}>
               Image(s)
             </label>
@@ -367,7 +370,7 @@ function AddRestaurant(props) {
                 display: "none",
               }}
             />
-          </div>
+          </div> */}
 
           <div id="imgpreview" className={styles["img-container"]}></div>
           <button

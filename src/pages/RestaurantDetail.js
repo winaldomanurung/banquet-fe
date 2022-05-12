@@ -207,6 +207,8 @@ function RestaurantDetail(props) {
   //     });
   // }, []);
 
+  console.log(counter);
+
   const mapImages = () => {
     return images.map((image, index) => {
       return (
@@ -221,6 +223,8 @@ function RestaurantDetail(props) {
       );
     });
   };
+
+  console.log(reviews);
 
   const mapComments = () => {
     return reviews.map((review, index) => {
@@ -241,11 +245,13 @@ function RestaurantDetail(props) {
             </div>
           </div>
           <div className={styles["content-reaction"]}>
-            {(review.likes && <AiFillLike size={"2em"} color="#069A8E" />) ||
-              (review.dislikes && (
+            {(review.likes == 1 && (
+              <AiFillLike size={"2em"} color="#069A8E" />
+            )) ||
+              (review.dislikes == 1 && (
                 <AiFillDislike size={"2em"} color="#f47174" />
               )) ||
-              (!review.dislikes && !review.likes && (
+              (review.dislikes == 0 && !review.likes == 0 && (
                 <GoDash size={"2em"} color="#808080" />
               ))}
           </div>
@@ -470,11 +476,30 @@ function RestaurantDetail(props) {
           <div className={styles["restaurant-container"]}>
             <div className={styles["restaurant-media"]}>
               <Carousel
-                controls={images > 1 ? true : false}
-                indicators={images > 1 ? true : false}
+                controls={images.length > 1 ? true : false}
+                indicators={images.length > 1 ? true : false}
               >
                 {mapImages()}
               </Carousel>
+              <div className={styles.reactionImg}>
+                {userLoginReaction.likes == 1 ? (
+                  <AiFillLike
+                    size={"2.5em"}
+                    color="#069A8E"
+                    className={styles["button-like"]}
+                    onClick={dislikeHandler}
+                  />
+                ) : userLoginReaction.dislikes == 1 ? (
+                  <AiFillDislike
+                    className={styles["button-dislike"]}
+                    size={"2.5em"}
+                    color="#c55354"
+                    onClick={likeHandler}
+                  />
+                ) : (
+                  <GoDash size={"2em"} color="#808080" />
+                )}
+              </div>
               <div className={styles.creator}>
                 <img
                   className={styles["creator-image"]}
@@ -489,44 +514,29 @@ function RestaurantDetail(props) {
                 </div>
               </div>
               <hr />
+
+              <hr />
               <div className={styles.reaction}>
                 <div className={styles.like}>
-                  {userLoginReaction.likes == 1 ? (
-                    <AiFillLike
-                      size={"2em"}
-                      color="#069A8E"
-                      className={styles["button-like"]}
-                      onClick={likeHandler}
-                    />
-                  ) : (
-                    <AiOutlineLike
-                      className={styles["button-like"]}
-                      size={"2em"}
-                      color="#069A8E"
-                      onClick={likeHandler}
-                    />
-                  )}
+                  <AiOutlineLike
+                    className={styles["button-like"]}
+                    size={"2em"}
+                    color="#2175f3"
+                    onClick={likeHandler}
+                  />
 
                   <div className={styles.counter}>
                     {counter == {} ? 0 : counter.total_likes}
                   </div>
                 </div>
                 <div className={styles.dislike}>
-                  {userLoginReaction.dislikes == 1 ? (
-                    <AiFillDislike
-                      className={styles["button-dislike"]}
-                      size={"2em"}
-                      color="#c55354"
-                      onClick={dislikeHandler}
-                    />
-                  ) : (
-                    <AiOutlineDislike
-                      className={styles["button-dislike"]}
-                      size={"2em"}
-                      color="#f47174"
-                      onClick={dislikeHandler}
-                    />
-                  )}
+                  <AiOutlineDislike
+                    className={styles["button-dislike"]}
+                    size={"2em"}
+                    color="#2175f3"
+                    onClick={dislikeHandler}
+                  />
+
                   <div className={styles.counter}>
                     {counter == {} ? 0 : counter.total_dislikes}
                   </div>

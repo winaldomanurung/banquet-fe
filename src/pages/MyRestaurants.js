@@ -4,16 +4,20 @@ import styles from "./MyRestaurants.module.css";
 import axios from "axios";
 import { URL_API } from "../helpers";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import ErrorModal from "../components/ErrorModal";
 
 import usePagination from "../hooks/usePagination";
 import RestaurantCard from "../components/RestaurantCard";
+import { connect } from "react-redux";
+import { getSuccess, getError, getLoading } from "../actions";
+import ErrorModal from "../components/ErrorModal";
+import SuccessModal from "../components/SuccessModal";
 import Spinner from "../components/Spinner";
 import AuthContext from "../store/auth-context";
 
-function MyRestaurants() {
+function MyRestaurants(props) {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
+  console.log(isLoggedIn);
 
   const params = useParams();
   const userId = params.userId;
@@ -55,7 +59,7 @@ function MyRestaurants() {
   return (
     <div className={styles.container}>
       {loading ? <Spinner /> : ""}
-      {error || !isLoggedIn ? (
+      {!isLoggedIn ? (
         <ErrorModal
           title="User ID is not registered"
           message="Please login with your credential and password"
@@ -118,4 +122,26 @@ function MyRestaurants() {
   );
 }
 
-export default MyRestaurants;
+const mapStateToProps = (state) => {
+  return {
+    isError: state.statusReducer.isError,
+    isSuccess: state.statusReducer.isSuccess,
+    isLoading: state.statusReducer.isLoading,
+    errorSubject: state.statusReducer.errorSubject,
+    successSubject: state.statusReducer.successSubject,
+    errorMessage: state.statusReducer.errorMessage,
+    successMessage: state.statusReducer.successMessage,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getError: (status, errorSubject, errorMessage) =>
+      dispatch(getError(status, errorSubject, errorMessage)),
+    getSuccess: (status, successSubject, successMessage) =>
+      dispatch(getSuccess(status, successSubject, successMessage)),
+    getLoading: (status) => dispatch(getLoading(status)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyRestaurants);
