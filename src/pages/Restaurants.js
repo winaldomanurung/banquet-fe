@@ -62,6 +62,16 @@ function Restaurants(props) {
           message="You have to login to view restaurant."
           onConfirm={() => setRedirect(true)}
         />
+      ) : (
+        ""
+      )}
+
+      {/* {!isLoggedIn ? (
+        <ErrorModal
+          title="Please login!"
+          message="You have to login to view restaurant."
+          onConfirm={() => setRedirect(true)}
+        />
       ) : !isVerified ? (
         <ErrorModal
           title="Please verify your account!"
@@ -70,7 +80,7 @@ function Restaurants(props) {
         />
       ) : (
         ""
-      )}
+      )} */}
       <div className={styles["data-render"]}>
         <div className={styles.title}>All Restaurants</div>
         <div className={styles["cards-container"]}>

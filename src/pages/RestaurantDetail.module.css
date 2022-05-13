@@ -344,6 +344,10 @@ input:focus::placeholder {
 .content-text {
   font-size: 0.9em;
 }
+.content-date {
+  padding-top: 5px;
+  font-size: 0.7em;
+}
 
 .reactionImg {
   position: absolute;
@@ -352,6 +356,20 @@ input:focus::placeholder {
   margin: 20px 0 0 20px;
   border: none;
   border-radius: 200px;
+}
+
+.more {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 20px;
+  background: #d5dbe6;
+  width: 150px;
+  margin: auto;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 1054px) {

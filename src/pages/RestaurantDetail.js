@@ -17,6 +17,7 @@ import {
   AiFillDislike,
   AiOutlineLike,
   AiOutlineDislike,
+  AiFillDownCircle,
 } from "react-icons/ai";
 import { GoDash } from "react-icons/go";
 import { RiErrorWarningFill } from "react-icons/ri";
@@ -31,6 +32,7 @@ import Spinner from "../components/Spinner";
 import AuthContext from "../store/auth-context";
 import { authLogin } from "../actions";
 import { restaurantData } from "../actions";
+import usePagination2 from "../hooks/usePagination2";
 
 function RestaurantDetail(props) {
   const params = useParams();
@@ -61,6 +63,9 @@ function RestaurantDetail(props) {
   const [counter, setCounter] = useState({});
   const [userLoginReaction, setUserLoginReaction] = useState({});
   const [reactionChange, setReactionChange] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [reviewAmount, setReviewAmount] = useState(5);
+  const [hasMore, setHasMore] = useState(false);
 
   // Ambil data restaurant
   useEffect(() => {
@@ -101,6 +106,8 @@ function RestaurantDetail(props) {
 
   // Ambil data user yang login
   useEffect(() => {
+    setReactionChange(false);
+
     axios
       .get(URL_API + "/users/retrieve-data", {
         headers: {
@@ -153,11 +160,28 @@ function RestaurantDetail(props) {
   }, []);
 
   // Fetch comments
+  // Ini untuk fetch dengan case fetch semua comment
   useEffect(() => {
     axios
-      .get(URL_API + `/reactions/${restaurantId}/get-reviews`)
+      .get(URL_API + `/reactions/${restaurantId}/get-reviews-paginated`, {
+        params: { page: pageNumber },
+      })
       .then((res) => {
-        setReviews(res.data.dataUser);
+        console.log(res.data.dataUser.length);
+        setHasMore(res.data.dataUser.length > 0);
+        if (pageNumber == 1) {
+          setReviews(res.data.dataUser);
+        } else {
+          setReviews((reviews) => {
+            return [...reviews, ...res.data.dataUser];
+          });
+        }
+
+        if (!res.data.token.length) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
       })
       .catch((err) => {
         props.getLoading(false);
@@ -167,7 +191,7 @@ function RestaurantDetail(props) {
           err.response.data.message
         );
       });
-  }, [props.isLoading]);
+  }, [props.isLoading, pageNumber]);
 
   // Menghitung like
   useEffect(() => {
@@ -207,8 +231,6 @@ function RestaurantDetail(props) {
   //     });
   // }, []);
 
-  console.log(counter);
-
   const mapImages = () => {
     return images.map((image, index) => {
       return (
@@ -224,10 +246,10 @@ function RestaurantDetail(props) {
     });
   };
 
-  console.log(reviews);
-
   const mapComments = () => {
     return reviews.map((review, index) => {
+      // console.log(reviews);
+      // console.log(review.likes == 1);
       return (
         <div className={styles.review} key={index}>
           <div className={styles["review-user"]}>
@@ -243,22 +265,74 @@ function RestaurantDetail(props) {
             <div className={styles["content-text"]}>
               {review.reviewDescription}
             </div>
+            <div className={styles["content-date"]}>{review.createdDate}</div>
           </div>
           <div className={styles["content-reaction"]}>
-            {(review.likes == 1 && (
+            {+review.likes == 1 && +review.dislikes != 1 ? (
               <AiFillLike size={"2em"} color="#069A8E" />
-            )) ||
-              (review.dislikes == 1 && (
-                <AiFillDislike size={"2em"} color="#f47174" />
-              )) ||
-              (review.dislikes == 0 && !review.likes == 0 && (
-                <GoDash size={"2em"} color="#808080" />
-              ))}
+            ) : +review.dislikes == 1 && +review.likes != 1 ? (
+              <AiFillDislike size={"2em"} color="#f47174" />
+            ) : (
+              <GoDash size={"2em"} color="#808080" />
+            )}
           </div>
         </div>
       );
     });
   };
+
+  // const mapCommentsPaginated = () => {
+  //   return dataReviews.map((review, index) => {
+  //     console.log(review);
+  //     console.log(props.userId);
+  //     // if(review.userId ==props.userId)
+  //     return (
+  //       <div className={styles.review} key={index}>
+  //         <div className={styles["review-user"]}>
+  //           <img
+  //             className={styles["user-image"]}
+  //             src={URL_API + review.imageUrl}
+  //           />
+  //           <div className={styles["user-name"]}>{review.username}</div>
+  //         </div>
+  //         <div className={styles["review-content"]}>
+  //           <div className={styles["content-title"]}>{review.reviewTitle}</div>
+
+  //           <div className={styles["content-text"]}>
+  //             {review.reviewDescription}
+  //           </div>
+  //           <div className={styles["content-date"]}>{review.createdDate}</div>
+  //         </div>
+  //         {review.userId != props.userId ? (
+  //           <div className={styles["content-reaction"]}>
+  //             {(review.likes == 1 && (
+  //               <AiFillLike size={"2em"} color="#069A8E" />
+  //             )) ||
+  //               (review.dislikes == 1 && (
+  //                 <AiFillDislike size={"2em"} color="#f47174" />
+  //               )) ||
+  //               (review.dislikes == 0 && review.likes == 0 && (
+  //                 <GoDash size={"2em"} color="#808080" />
+  //               ))}
+  //           </div>
+  //         ) : (
+  //           <div className={styles["content-reaction"]}>
+  //             {(userLoginReaction.likes == 1 && (
+  //               <AiFillLike size={"2em"} color="#069A8E" />
+  //             )) ||
+  //               (userLoginReaction.dislikes == 1 && (
+  //                 <AiFillDislike size={"2em"} color="#f47174" />
+  //               )) ||
+  //               (userLoginReaction.dislikes == 0 &&
+  //                 userLoginReaction.likes == 0 && (
+  //                   <GoDash size={"2em"} color="#808080" />
+  //                 ))}
+  //           </div>
+  //         )}
+  //       </div>
+  //     );
+  //   });
+  // };
 
   const titleValidation = (name) => name.trim() !== "" && name.length >= 3;
   const descriptionValidation = (description) =>
@@ -297,6 +371,7 @@ function RestaurantDetail(props) {
       return;
     }
     props.getLoading(true);
+    setPageNumber(1);
 
     //buat requestnya
     axios
@@ -335,6 +410,8 @@ function RestaurantDetail(props) {
         props.getSuccess(true, res.data.subject, res.data.message);
         resetTitleInput();
         resetDescriptionInput();
+
+        setRedirect(true);
       })
       .catch((err) => {
         props.getLoading(false);
@@ -345,6 +422,18 @@ function RestaurantDetail(props) {
         );
       });
   };
+
+  // let { dataReviews, hasMore, loading, error } = usePagination2(
+  //   pageNumber,
+  //   `/reactions/${restaurantId}/get-reviews-paginated`
+  // );
+
+  const nextPageHandler = () => {
+    setPageNumber((pageNumber) => pageNumber + 1);
+  };
+
+  // console.log(dataReviews);
+  // console.log(hasMore);
 
   const titleInputClasses = titleInputHasError ? styles.invalid : "";
   const descriptionInputClasses = descriptionInputHasError
@@ -383,6 +472,7 @@ function RestaurantDetail(props) {
         setReactionChange(true);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
+        setPageNumber(1);
       })
       .catch((err) => {
         // console.log(err);
@@ -415,6 +505,7 @@ function RestaurantDetail(props) {
         setReactionChange(true);
         props.getLoading(false);
         props.getSuccess(true, res.data.subject, res.data.message);
+        setPageNumber(1);
       })
       .catch((err) => {
         props.getLoading(false);
@@ -515,7 +606,6 @@ function RestaurantDetail(props) {
               </div>
               <hr />
 
-              <hr />
               <div className={styles.reaction}>
                 <div className={styles.like}>
                   <AiOutlineLike
@@ -623,7 +713,12 @@ function RestaurantDetail(props) {
               <button className={styles.edit}>Edit</button>
             </Link>
 
-            <button className={styles.delete} onClick={() => setOnDelete(true)}>
+            <button
+              className={styles.delete}
+              onClick={() => {
+                setOnDelete(true);
+              }}
+            >
               Delete
             </button>
           </div>
@@ -659,6 +754,7 @@ function RestaurantDetail(props) {
                 name="textarea"
                 rows="4"
                 cols="50"
+                maxlength="300"
                 placeholder="Review description..."
                 className={`${styles.input} ${descriptionInputClasses}`}
                 onChange={descriptionChangeHandler}
@@ -686,6 +782,26 @@ function RestaurantDetail(props) {
           <div className={styles["review-container"]} id="reviews">
             <div className={styles.title}>Reviews</div>
             {mapComments()}
+          </div>
+        ) : (
+          ""
+        )}
+        {/* {dataReviews.length ? (
+          <div className={styles["review-container"]} id="reviews">
+            <div className={styles.title}>Reviews</div>
+            {mapCommentsPaginated()}
+          </div>
+        ) : (
+          ""
+        )} */}
+        {hasMore ? (
+          <div className={styles.more} onClick={nextPageHandler}>
+            See more{" "}
+            <AiFillDownCircle
+              style={{ paddingLeft: "10px" }}
+              size={"2em"}
+              color="#929499"
+            />
           </div>
         ) : (
           ""
