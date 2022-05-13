@@ -17,7 +17,7 @@ import AuthContext from "../store/auth-context";
 function MyRestaurants(props) {
   const authCtx = useContext(AuthContext);
   const isLoggedIn = authCtx.isLoggedIn;
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
 
   const params = useParams();
   const userId = params.userId;

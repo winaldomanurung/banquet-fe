@@ -32,7 +32,6 @@ import Spinner from "../components/Spinner";
 import AuthContext from "../store/auth-context";
 import { authLogin } from "../actions";
 import { restaurantData } from "../actions";
-import usePagination2 from "../hooks/usePagination2";
 
 function RestaurantDetail(props) {
   const params = useParams();
@@ -167,7 +166,6 @@ function RestaurantDetail(props) {
         params: { page: pageNumber },
       })
       .then((res) => {
-        console.log(res.data.dataUser.length);
         setHasMore(res.data.dataUser.length > 0);
         if (pageNumber == 1) {
           setReviews(res.data.dataUser);
@@ -209,27 +207,6 @@ function RestaurantDetail(props) {
         );
       });
   }, [reactionChange]);
-
-  // // Reaction by user yang sedang login
-  // useEffect(() => {
-  //   console.log(props.userId);
-
-  //   axios
-  //     .get(URL_API + `/reactions/${restaurantId}/get-reactions/${props.userId}`)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setUserLoginReaction(res.data.dataUser);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       props.getLoading(false);
-  //       props.getError(
-  //         true,
-  //         err.response.data.subject,
-  //         err.response.data.message
-  //       );
-  //     });
-  // }, []);
 
   const mapImages = () => {
     return images.map((image, index) => {
@@ -280,59 +257,6 @@ function RestaurantDetail(props) {
       );
     });
   };
-
-  // const mapCommentsPaginated = () => {
-  //   return dataReviews.map((review, index) => {
-  //     console.log(review);
-  //     console.log(props.userId);
-  //     // if(review.userId ==props.userId)
-  //     return (
-  //       <div className={styles.review} key={index}>
-  //         <div className={styles["review-user"]}>
-  //           <img
-  //             className={styles["user-image"]}
-  //             src={URL_API + review.imageUrl}
-  //           />
-  //           <div className={styles["user-name"]}>{review.username}</div>
-  //         </div>
-  //         <div className={styles["review-content"]}>
-  //           <div className={styles["content-title"]}>{review.reviewTitle}</div>
-
-  //           <div className={styles["content-text"]}>
-  //             {review.reviewDescription}
-  //           </div>
-  //           <div className={styles["content-date"]}>{review.createdDate}</div>
-  //         </div>
-  //         {review.userId != props.userId ? (
-  //           <div className={styles["content-reaction"]}>
-  //             {(review.likes == 1 && (
-  //               <AiFillLike size={"2em"} color="#069A8E" />
-  //             )) ||
-  //               (review.dislikes == 1 && (
-  //                 <AiFillDislike size={"2em"} color="#f47174" />
-  //               )) ||
-  //               (review.dislikes == 0 && review.likes == 0 && (
-  //                 <GoDash size={"2em"} color="#808080" />
-  //               ))}
-  //           </div>
-  //         ) : (
-  //           <div className={styles["content-reaction"]}>
-  //             {(userLoginReaction.likes == 1 && (
-  //               <AiFillLike size={"2em"} color="#069A8E" />
-  //             )) ||
-  //               (userLoginReaction.dislikes == 1 && (
-  //                 <AiFillDislike size={"2em"} color="#f47174" />
-  //               )) ||
-  //               (userLoginReaction.dislikes == 0 &&
-  //                 userLoginReaction.likes == 0 && (
-  //                   <GoDash size={"2em"} color="#808080" />
-  //                 ))}
-  //           </div>
-  //         )}
-  //       </div>
-  //     );
-  //   });
-  // };
 
   const titleValidation = (name) => name.trim() !== "" && name.length >= 3;
   const descriptionValidation = (description) =>
@@ -423,17 +347,9 @@ function RestaurantDetail(props) {
       });
   };
 
-  // let { dataReviews, hasMore, loading, error } = usePagination2(
-  //   pageNumber,
-  //   `/reactions/${restaurantId}/get-reviews-paginated`
-  // );
-
   const nextPageHandler = () => {
     setPageNumber((pageNumber) => pageNumber + 1);
   };
-
-  // console.log(dataReviews);
-  // console.log(hasMore);
 
   const titleInputClasses = titleInputHasError ? styles.invalid : "";
   const descriptionInputClasses = descriptionInputHasError
@@ -786,14 +702,6 @@ function RestaurantDetail(props) {
         ) : (
           ""
         )}
-        {/* {dataReviews.length ? (
-          <div className={styles["review-container"]} id="reviews">
-            <div className={styles.title}>Reviews</div>
-            {mapCommentsPaginated()}
-          </div>
-        ) : (
-          ""
-        )} */}
         {hasMore ? (
           <div className={styles.more} onClick={nextPageHandler}>
             See more{" "}
