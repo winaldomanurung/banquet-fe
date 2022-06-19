@@ -83,6 +83,7 @@ function RestaurantDetail(props) {
           err.response.data.subject,
           err.response.data.message
         );
+        console.log(err);
       });
   }, []);
 
@@ -182,12 +183,13 @@ function RestaurantDetail(props) {
         }
       })
       .catch((err) => {
-        props.getLoading(false);
-        props.getError(
-          true,
-          err.response.data.subject,
-          err.response.data.message
-        );
+        // props.getLoading(false);
+        // props.getError(
+        //   true,
+        //   err.response.data.subject,
+        //   err.response.data.message
+        // );
+        console.log(err);
       });
   }, [props.isLoading, pageNumber]);
 
