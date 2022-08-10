@@ -32,6 +32,23 @@ import Spinner from "../components/Spinner";
 import AuthContext from "../store/auth-context";
 import { authLogin } from "../actions";
 import { restaurantData } from "../actions";
+// // eslint-disable-next-line import/no-webpack-loader-syntax
+// import mapboxgl from "!mapbox-gl";
+// // eslint-disable-next-line import/no-webpack-loader-syntax
+// import MapboxWorker from "worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker";
+
+import mapboxgl from "mapbox-gl";
+// The following is required to stop "npm build" from transpiling mapbox code.
+// notice the exclamation point in the import.
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import MapboxWorker from "worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker";
+// mapboxgl.workerClass =
+//   require("worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker").default;
+
+mapboxgl.workerClass = MapboxWorker.default;
 
 function RestaurantDetail(props) {
   const params = useParams();
@@ -609,7 +626,7 @@ function RestaurantDetail(props) {
             </div>
           </div>
 
-          <div className={styles["location-map"]}>
+          {/* <div className={styles["location-map"]}>
             <Map
               initialViewState={{
                 longitude: long,
@@ -623,7 +640,7 @@ function RestaurantDetail(props) {
                 <FaMapMarkerAlt size={"3em"} color="#2175f3" />
               </Marker>
             </Map>
-          </div>
+          </div> */}
         </div>
         {user.userId == props.userId ? (
           <div className={styles.operation}>

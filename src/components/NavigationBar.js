@@ -47,8 +47,8 @@ function NavigationBar(props) {
             )}
             <Nav.Link eventKey="2">
               <Link
-                to={props.isVerified ? "/restaurants" : "profile/verification"}
-                // to={"/restaurants"}
+                // to={props.isVerified ? "/restaurants" : "profile/verification"}
+                to={"/restaurants"}
                 style={{ textDecoration: "none", color: "#0b0b0b" }}
               >
                 Restaurants

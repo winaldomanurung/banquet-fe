@@ -18,19 +18,19 @@ function Restaurants(props) {
   const { dataRestaurants, hasMore, loading, error, isVerified } =
     usePagination(pageNumber, "/restaurants", props.userId);
 
-  const [redirect, setRedirect] = useState(false);
-  let navigate = useNavigate();
-  const goRedirect = () => {
-    if (redirect && !isLoggedIn) {
-      // console.log("Redirect");
-      return navigate("/login", { replace: true });
-    } else if (redirect && !isVerified) {
-      // console.log("Redirect");
-      return navigate("/profile/verification", { replace: true });
-    }
-  };
+  // const [redirect, setRedirect] = useState(false);
+  // let navigate = useNavigate();
+  // const goRedirect = () => {
+  //   if (redirect && !isLoggedIn) {
+  //     // console.log("Redirect");
+  //     return navigate("/login", { replace: true });
+  //   } else if (redirect && !isVerified) {
+  //     // console.log("Redirect");
+  //     return navigate("/profile/verification", { replace: true });
+  //   }
+  // };
 
-  goRedirect();
+  // goRedirect();
 
   const observer = useRef();
   const lastDataElementRef = useCallback(
@@ -56,7 +56,7 @@ function Restaurants(props) {
     <div className={styles.container}>
       {loading ? <Spinner /> : ""}
 
-      {!isLoggedIn ? (
+      {/* {!isLoggedIn ? (
         <ErrorModal
           title="Please login!"
           message="You have to login to view restaurant."
@@ -64,7 +64,7 @@ function Restaurants(props) {
         />
       ) : (
         ""
-      )}
+      )} */}
 
       {/* {!isLoggedIn ? (
         <ErrorModal
